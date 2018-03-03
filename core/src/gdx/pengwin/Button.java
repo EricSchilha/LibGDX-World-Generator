@@ -6,10 +6,10 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 public class Button extends Sprite {
     ScreenType screenType;
     boolean isPressed;
-    final static int BUTTON_WIDTH = 100;
-    final static int BUTTON_HEIGHT = 50;
+    final static int BUTTON_WIDTH = 250;
+    final static int BUTTON_HEIGHT = 100;
 
-    Button(int nW, int nH, int nX, int nY, Texture txButtonUp, Texture txButtonDown, ScreenType screenType) {
+    Button(int nW, int nH, int nX, int nY, Texture txButtonUp, ScreenType screenType) {
         super(txButtonUp);
         this.screenType = screenType;
         isPressed = false;
@@ -20,8 +20,7 @@ public class Button extends Sprite {
 
     @Override
     public void setTexture(Texture texture) {
-        //super(texture);
-        this.setTexture(texture);
         isPressed = !isPressed;
+        super.setTexture(texture);
     }
 }
