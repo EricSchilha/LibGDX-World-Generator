@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 public abstract class GameScreen implements Screen, InputProcessor {
-    SpriteBatch batch;
+    public SpriteBatch batch;
     GamMain gamMain;
     OrthographicCamera oc;
     ScreenType screenType;
