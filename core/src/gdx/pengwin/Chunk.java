@@ -12,11 +12,10 @@ public class Chunk {
     public double[][] ardHeightMap; //Stores the perlin noise
     public Object[][] arobjObjects; //Stores the other things on the map (trees, rocks, etc.)
     public Tile[][] artilTiles;
-    //    int nWidth, nHeight;
-    //    int nX, nY;
+    //public int nX, nY;
 
-    public Chunk(Tile[][] artilTiles) {
-        this.artilTiles = artilTiles;
+    public Chunk(/*Tile[][] artilTiles*/) {
+        this.artilTiles = new Tile[CHUNK_HEIGHT][CHUNK_WIDTH];
         this.arobjObjects = new Object[CHUNK_HEIGHT][CHUNK_WIDTH];
         this.ardHeightMap = Noise.noiseMap(CHUNK_WIDTH, CHUNK_HEIGHT);
         createTileMap();
@@ -29,13 +28,13 @@ public class Chunk {
                 int nX = x * Tile.TILE_WIDTH;
                 int nY = y * Tile.TILE_HEIGHT;
                 artilTiles[y][x] = (ardHeightMap[y][x] < 0) ? new Tile(nX, nY, new Texture(Gdx.files.internal("WaterTile.png")), TileType.Water) :
-                        (ardHeightMap[y][x] < 6.5 ? new Tile(nX, nY, new Texture(Gdx.files.internal("GrassTile.png")), TileType.Grass) :
+                        (ardHeightMap[y][x] < 0.5 ? new Tile(nX, nY, new Texture(Gdx.files.internal("GrassTile.png")), TileType.Grass) :
                                 new Tile(nX, nY, new Texture(Gdx.files.internal("MountainTile.png")), TileType.Mountain));
             }
         }
     }
 
-    public void draw(int nX, int nY/*, Player player*/, SpriteBatch batch) {
+    public void draw(int nX, int nY, SpriteBatch batch) {
         Vector2 vTopLeft = this.getMapArrayIndices(new Vector2(nX - (Gdx.graphics.getWidth() / 2), nY - (Gdx.graphics.getHeight() / 2)));
         Vector2 vBottomRight = this.getMapArrayIndices(new Vector2(nX + (Gdx.graphics.getWidth() / 2) + Tile.TILE_WIDTH * 2, nY + (Gdx.graphics.getHeight() / 2) + Tile.TILE_WIDTH * 2));
         if (vTopLeft.x < 0)
@@ -50,21 +49,25 @@ public class Chunk {
         for (int y = (int) vTopLeft.y; y < (int) vBottomRight.y; y++) {
             for (int x = (int) vTopLeft.x; x < (int) vBottomRight.x; x++) {
                 TileType tileType = artilTiles[y][x].tileType;
-                ObjectType objectType = arobjObjects[y][x].objectType;
+                //ObjectType objectType = arobjObjects[y][x].objectType;
 
-                switch (tileType) {
+                switch (tileType) { // Redundancy only temporary... hopefully
                     case Grass:
                         artilTiles[y][x].draw(batch, (float) (nX + (x * Tile.TILE_WIDTH)), (float) (nY + (y * Tile.TILE_HEIGHT)));
                         break;
                     case Water:
+                        artilTiles[y][x].draw(batch, (float) (nX + (x * Tile.TILE_WIDTH)), (float) (nY + (y * Tile.TILE_HEIGHT)));
+                        break;
+                    case Mountain:
+                        artilTiles[y][x].draw(batch, (float) (nX + (x * Tile.TILE_WIDTH)), (float) (nY + (y * Tile.TILE_HEIGHT)));
                         break;
                 }
 
-                switch (objectType) {
+                /*switch (objectType) {
                     case Tree:
                         arobjObjects[y][x].draw(batch, (float) (nX + (x * Tile.TILE_WIDTH)), (float) (nY + (y * Tile.TILE_HEIGHT)));
                         break;
-                }
+                }*/
             }
         }
     }

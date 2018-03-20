@@ -1,7 +1,5 @@
 package gdx.pengwin;
 
-import java.util.Arrays;
-
 import static com.badlogic.gdx.math.MathUtils.random;
 
 
@@ -55,8 +53,8 @@ public class Noise {
                     double dF = sample(x - nHalfStep, y + nHalfStep);
                     double dH = (dA + dB + dD + dE) / 4.0 + (Math.random() * 2 - 1) * nStepSize * dScale * 0.5;
                     double dG = (dA + dC + dD + dF) / 4.0 + (Math.random() * 2 - 1) * nStepSize * dScale * 0.5;
-                    ardValues[((x + nHalfStep) & (nWidth - 1)) + (y & (nHeight - 1))] = dE;
-                    ardValues[(x & (nWidth - 1)) + ((y + nHalfStep) & (nHeight - 1))] = dE;
+                    ardValues[((x + nHalfStep) & (nWidth - 1)) + (y & (nHeight - 1))] = dH;
+                    ardValues[(x & (nWidth - 1)) + ((y + nHalfStep) & (nHeight - 1))] = dG;
                 }
             }
             nStepSize /= 2;
@@ -67,7 +65,6 @@ public class Noise {
 
     public static double[][] noiseMap(int nWidth, int nHeight) {
         double[][] ardMap = new double[nHeight][nWidth];
-        Arrays.fill(ardMap, 1); //Temporary
 
         Noise noise1 = new Noise(nWidth, nHeight, nWidth / 4);
         Noise noise2 = new Noise(nWidth, nHeight, nWidth / 8);
@@ -82,7 +79,7 @@ public class Noise {
                 double dDist = (dX >= dY) ? dX : dY;
                 dDist = Math.pow(Math.pow(dDist, 4), 3);
                 dVal = dVal + 1 - (dDist * 20);
-                //ardMap[y][x] = dVal;
+                ardMap[y][x] = dVal;
             }
         }
 
