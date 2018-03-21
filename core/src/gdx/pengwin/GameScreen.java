@@ -60,7 +60,6 @@ public abstract class GameScreen implements Screen, InputProcessor {
     @Override
     public boolean touchUp(int screenX, int screenY, int pointer, int mouseButton) {
         if (mouseButton == Input.Buttons.LEFT)
-            //for(Button button : alButtons)
             for (int i = 0; i < alButtons.size(); i++) //Using the other type of for loop caused an error (java.util.ConcurrentModificationException)
                 if (alButtons.get(i).isPressed)
                     for (GameScreen screen : gamMain.alScreens)

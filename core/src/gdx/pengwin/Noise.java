@@ -12,6 +12,8 @@ http://mrl.nyu.edu/~perlin/noise/
 http://devmag.org.za/2009/04/25/perlin-noise/
 Based off: https://github.com/theDazzler/Infinite-World/blob/master/src/com/devon/infiniteworld/NoiseMap.java
  */
+
+
 public class Noise {
     double[] ardValues;
     int nWidth, nHeight;

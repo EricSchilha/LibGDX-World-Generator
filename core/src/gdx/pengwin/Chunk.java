@@ -14,7 +14,7 @@ public class Chunk {
     public Tile[][] artilTiles;
     //public int nX, nY;
 
-    public Chunk(/*Tile[][] artilTiles*/) {
+    public Chunk() {
         this.artilTiles = new Tile[CHUNK_HEIGHT][CHUNK_WIDTH];
         this.arobjObjects = new Object[CHUNK_HEIGHT][CHUNK_WIDTH];
         this.ardHeightMap = Noise.noiseMap(CHUNK_WIDTH, CHUNK_HEIGHT);
