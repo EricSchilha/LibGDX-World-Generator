@@ -5,13 +5,13 @@
 * map represent trees.
 */
 
-int W = 25, H = 25, D = 25;
+int W, H, D;
 int val, scale;
 boolean outOfBounds;
 Map map;
 void setup() {
-  size(1200, 1200);
-  scale = 30;
+  size(800, 800);
+  scale = 20;
   W = height/scale;
   H = width/scale;
   map = new Map(W, H);
@@ -19,6 +19,8 @@ void setup() {
 }
 
 void draw() {
+  noiseSeed(0);
+  randomSeed(0);
   background(255);
   drawMap();
 }
@@ -40,17 +42,21 @@ void drawMap() {
 class Map {
   private final int W, H;
   Tile terrain[][];
+  float wOffset, hOffset;
   Map(int W, int H) {
     this.W = W;
     this.H = H;
+    this.wOffset = 0;
+    this.hOffset = 0;
     terrain = new Tile[H][W];
     generateTerrain();
   }
   public void generateTerrain() {
-    float hOffset = 0, wOffset = 0;
-    for (int h = 0; h < W; h++) {
+   wOffset = 0;
+   hOffset = 0;
+    for (int h = 0; h < H; h++) {
       wOffset = 0;
-      for (int w = 0; w < H; w++) {
+      for (int w = 0; w < W; w++) {
         terrain[h][w] = new Tile(parseInt(map(noise(hOffset, wOffset), 0, 1, 0, 10)), w, h, State.Grass);
         wOffset+=0.2;
       }

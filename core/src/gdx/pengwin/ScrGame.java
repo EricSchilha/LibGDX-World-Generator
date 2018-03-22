@@ -18,6 +18,12 @@ public class ScrGame extends GameScreen {
     }
 
     @Override
+    public void show() {
+        mapMap = new Map(0);
+        super.show();
+    }
+
+    @Override
     public void render(float delta) {
         Gdx.gl.glClearColor(0, 1, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
