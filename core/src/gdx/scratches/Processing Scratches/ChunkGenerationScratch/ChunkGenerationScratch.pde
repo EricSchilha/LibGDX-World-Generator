@@ -8,16 +8,16 @@ void setup() {
   size(750, 750);
   nWidth = width/nCellSize;
   nHeight = height/nCellSize;
-  world.arTiles[location.nY][location.nX] = new Tile(State.Player);
+  world.arTiles[location.nY][location.nX] = new Tile(Type.Player);
 }
 
 void draw() {
   background(255);
   for (int y = -(int)Math.floor(nHeight/2); y < (int)Math.ceil(nHeight/2); y++) {
     for (int x = -(int)Math.floor(nWidth/2); x < (int)Math.ceil(nWidth/2); x++) {
-      if (world.arTiles[location.nY+y][location.nX+x].state==State.Grass) {
+      if (world.arTiles[location.nY+y][location.nX+x].type==Type.Grass) {
         fill(0, 255, 0);
-      } else if (world.arTiles[location.nY+y][location.nX+x].state==State.Player) {
+      } else if (world.arTiles[location.nY+y][location.nX+x].type==Type.Player) {
         fill(255, 0, 0);
       }
       rect(nCellSize*(x+(int)Math.floor(nWidth/2)), nCellSize*(y+(int)Math.floor(nHeight/2)), nCellSize, nCellSize);
@@ -39,9 +39,9 @@ void keyPressed() {
 
 Location moveToLocation(Location oldLocation, Location newLocation) {
   //if(!object at location) {
-  world.arTiles[oldLocation.nY][oldLocation.nX].state = State.Player;
+  world.arTiles[oldLocation.nY][oldLocation.nX].type = Type.Player;
   println(newLocation.nX + " " + newLocation.nY + " " + world.arTiles[newLocation.nY][newLocation.nX] + " " + startLocation.nX + " " + startLocation.nY);
-  world.arTiles[newLocation.nY][newLocation.nX].state = State.Grass;
+  world.arTiles[newLocation.nY][newLocation.nX].type = Type.Grass;
   if (world.arChunks[1][1].TL.nX>newLocation.nX||world.arChunks[1][1].TL.nY>newLocation.nY||world.arChunks[1][1].BR.nX<newLocation.nX||world.arChunks[1][1].BR.nY<newLocation.nY) {
     world.generateChunks(startLocation, location);
   }
@@ -61,10 +61,10 @@ class World {
   void generateChunks(Location start, Location current) {
     for (int y = 0; y < 3; y++) {
       for (int x = 0; x < 3; x++) {
-        arChunks[y][x] = new Chunk(new Location(current.nX-((current.nX-start.nX)%nChunkSize) + x*nChunkSize, current.nY-((current.nY-start.nY)%nChunkSize) + y*nChunkSize), nChunkSize);
+        //arChunks[y][x] = new Chunk(new Location(current.nX-((current.nX-start.nX)%nChunkSize) + x*nChunkSize, current.nY-((current.nY-start.nY)%nChunkSize) + y*nChunkSize), nChunkSize);
         for (int i = arChunks[y][x].TL.nY; i < arChunks[y][x].TL.nY+nChunkSize; i++) {
           for (int j = arChunks[y][x].TL.nY; j < arChunks[y][x].TL.nY+nChunkSize; j++) {
-            arTiles[i][j] = new Tile(State.Grass);
+            arTiles[i][j] = new Tile(Type.Grass);
           }
         }
       }
@@ -111,15 +111,6 @@ class Chunk {
   }
 }
 
-class NoiseMap {
-
-  NoiseMap() {
-  }
-
-  static double[][] getMap(int nWidth, int nHeight, int nX, int nY) {
-  }
-}
-
 class Player {
   Location position;
   int nWidth, nHeight;
@@ -130,17 +121,17 @@ class Player {
   }
 }
 
-class Tile {
+static class Tile {
   Type type;
-  static int HEIGHT = 64;
-  static int WIDTH = 64;
+  public static int TILE_HEIGHT = 64;
+  public static int TILE_WIDTH = 64;
   Tile(Type type) {
     this.type = type;
   }
 }
 
 enum Type {
-  Grass, Tree, Rock, Water;
+  Grass, Tree, Rock, Water, Player;
 }
 
 class Location {

@@ -5,11 +5,12 @@ import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 import gdx.pengwin.GamMain;
 
 public class DesktopLauncher {
-	public static void main (String[] arg) {
-		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
+    public static LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
+
+    public static void main (String[] arg) {
         config.title = "PENGWIN";
-        config.width = 1000;
-        config.height = 750;
+        config.width = 800;
+        config.height = 800;
         //config.resizable = true;
         new LwjglApplication(new GamMain(), config);
 	}

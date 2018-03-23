@@ -4,7 +4,7 @@ void vegetation() {
       do {
         outOfBounds = false;
         try {
-          map.terrain[(int)random(y-2, y+2)][(int)random(x-2, x+2)].state = State.Tree;
+          map.terrain[(int)random(y-2, y+2)][(int)random(x-2, x+2)].TileType = TileType.Tree;
         } 
         catch (Exception e) {
           outOfBounds=true;

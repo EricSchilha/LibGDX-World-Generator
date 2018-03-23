@@ -6,7 +6,8 @@
 */
 
 int W, H, D;
-int val, scale;
+int scale;
+float val;
 boolean outOfBounds;
 Map map;
 void setup() {
@@ -29,8 +30,8 @@ void drawMap() {
   for (int h = 0; h < map.getHeight(); h++) {
     for (int w = 0; w < map.getWidth(); w++) {
       val = map.terrain[h][w].depth;
-      if(map.terrain[h][w].state==State.Grass){
-        fill(0, map(val, 0, 10, 255, 0), 0);
+      if(map.terrain[h][w].TileType==TileType.Grass){
+        fill(0, map(val, 0, 1, 255, 0), 0);
       } else {
         fill(0, 0, 255);
       }
@@ -57,7 +58,7 @@ class Map {
     for (int h = 0; h < H; h++) {
       wOffset = 0;
       for (int w = 0; w < W; w++) {
-        terrain[h][w] = new Tile(parseInt(map(noise(hOffset, wOffset), 0, 1, 0, 10)), w, h, State.Grass);
+        terrain[h][w] = new Tile(noise(hOffset, wOffset), w, h, TileType.Grass);
         wOffset+=0.2;
       }
       hOffset+=0.2;
@@ -73,16 +74,17 @@ class Map {
 }
 
 class Tile {
-  int x, y, depth;
-  State state;
-  Tile(int depth, int x, int y, State state) {
+  int x, y;
+  float depth;
+  TileType TileType;
+  Tile(float depth, int x, int y, TileType TileType) {
     this.depth = depth;
     this.x = x;
     this.y = y;
-    this.state = state;
+    this.TileType = TileType;
   }
 }
 
-enum State {
+enum TileType {
   Tree, Grass;
 }
