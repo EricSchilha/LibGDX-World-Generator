@@ -1,7 +1,5 @@
 package gdx.pengwin;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 
@@ -35,9 +33,9 @@ public class Chunk {
             for (int x = 0; x < artilTiles[y].length; x++) {
                 double dNoiseVal = noise.noise(fWidthOffset, fHeightOffset);
                 fWidthOffset += 0.1;
-                artilTiles[y][x] = (dNoiseVal < 0.35) ? new Tile(x * Tile.TILE_WIDTH, y * Tile.TILE_HEIGHT, new Texture(Gdx.files.internal("WaterTile.png")), TileType.Water) :
-                        (dNoiseVal < 0.65 ? new Tile(x * Tile.TILE_WIDTH, y * Tile.TILE_HEIGHT, new Texture(Gdx.files.internal("GrassTile.png")), TileType.Grass) :
-                                new Tile(x * Tile.TILE_WIDTH, y * Tile.TILE_HEIGHT, new Texture(Gdx.files.internal("MountainTile.png")), TileType.Mountain));
+                artilTiles[y][x] = (dNoiseVal < 0.35) ? new Tile(TileType.Water) :
+                        (dNoiseVal < 0.65 ? new Tile(TileType.Grass) :
+                                new Tile(TileType.Mountain));
             }
             fHeightOffset += 0.1;
         }
