@@ -1,79 +1,129 @@
-int scale;
-float val;
-boolean outOfBounds;
-Map map;
-void setup() {
-  size(800, 800);
-  map = new Map();
+int nPlayerX = 0, nPlayerY = 0;
+private int CHUNK_SIZE = 32;
+private int TILE_SIZE;
+static int nScale = 20;
+Map mapMap;
+public void setup() {
+  size(2000, 1200);
+  mapMap = new Map();
+  surface.setResizable(true);
 }
 
 void draw() {
-  noiseSeed(0);
-  randomSeed(0);
   background(255);
-  map.drawChunks();
+  resizeTiles();
+  mapMap.drawChunks();
+  //println(nPlayerX + "\t" + nPlayerY);
+  if (keyPressed && key==CODED) {
+    if (keyCode == UP) {
+      nPlayerY--;
+    } else if (keyCode == DOWN) {
+      nPlayerY++;
+    } else if (keyCode == LEFT) {
+      nPlayerX--;
+    } else if (keyCode == RIGHT) {
+      nPlayerX++;
+    }
+  }
 }
 
-
+void resizeTiles() {
+  TILE_SIZE = (width+height)/CHUNK_SIZE/3;
+}
 
 class Map {
-  float wOffset, hOffset;
   ArrayList<Chunk> alChunks = new ArrayList<Chunk>();
-  Map() {
-    this.wOffset = 0;
-    this.hOffset = 0;
-    alChunks.add(new Chunk());
+  Chunk[][] arChunks = new Chunk[5][5];
+  public Map() {
+    for (int y = 0; y < arChunks.length; y++) 
+      for (int x = 0; x < arChunks[y].length; x++) 
+        arChunks[y][x] = new Chunk(CHUNK_SIZE * (x - ((arChunks[y].length-1)/2)), CHUNK_SIZE * (y - ((arChunks.length-1)/2)));
   }
 
-  void drawChunks() {
-    for (Chunk chunk : alChunks) {
-      for (int h = 0; h < chunk.CHUNK_HEIGHT; h++) {
-        for (int w = 0; w < chunk.CHUNK_WIDTH; w++) {
-          val = chunk.terrain[h][w].depth;
-          if (chunk.terrain[h][w].TileType==TileType.Grass) {
-            fill(0, map(val, 0, 1, 255, 0), 0);
-          } else {
-            fill(0, 0, 255);
-          }
-          rect(w*scale, h*scale, scale, scale);
-        }
-      }
+  public void drawChunks() {
+    updateMap();
+    for (Chunk[] chunkAr : arChunks)
+      for (Chunk chunk : chunkAr) 
+        chunk.drawTiles();
+  }
+
+  public void updateMap() {
+    PVector vPlayerChunk = getChunkIndices(new PVector(nPlayerX, nPlayerY));
+    if (arChunks[arChunks[arChunks.length/2].length/2][arChunks.length/2].vTopLeft.x == vPlayerChunk.x && arChunks[arChunks[arChunks.length/2].length/2][arChunks.length/2].vTopLeft.y == vPlayerChunk.y) {
+      return;
     }
+    int nPlayerChunkX = (int)vPlayerChunk.x;
+    int nPlayerChunkY = (int)vPlayerChunk.y;
+    for (int y = 0; y < arChunks.length; y++) 
+      for (int x = 0; x < arChunks[y].length; x++) 
+        arChunks[y][x] = new Chunk(nPlayerChunkX - CHUNK_SIZE * (x - ((arChunks[y].length-1)/2)), nPlayerChunkY - CHUNK_SIZE * (y - ((arChunks.length-1)/2)));
   }
 }
+
 
 class Chunk {
-  public int CHUNK_WIDTH = 32;
-  public int CHUNK_HEIGHT = 32;
-  Tile terrain[][];
-  public Chunk() {
-    terrain = new Tile[CHUNK_HEIGHT][CHUNK_WIDTH];
+  PVector vTopLeft;
+  Tile[][] arTiles;
+
+
+  public Chunk(int nX, int nY) {
+    arTiles = new Tile[CHUNK_SIZE][CHUNK_SIZE];
+    vTopLeft = new PVector(nX, nY);
     generateTerrain();
   }
+
   public void generateTerrain() {
-    float wOffset = 0;
-    float hOffset = 0;
-    for (int h = 0; h < CHUNK_HEIGHT; h++) {
-      wOffset = 0;
-      for (int w = 0; w < CHUNK_WIDTH; w++) {
-        terrain[h][w] = new Tile(noise(hOffset, wOffset), w, h, TileType.Grass);
-        wOffset+=0.2;
+    float fWidthOffset = 0, fHeightOffset = 0, fPersistence = 0.08;
+    for (int y = 0; y < CHUNK_SIZE; y++) {
+      fWidthOffset = 0;
+      for (int x = 0; x < CHUNK_SIZE; x++) {
+        arTiles[y][x] = new Tile(noise(vTopLeft.x * fPersistence + fWidthOffset, vTopLeft.y * fPersistence + fHeightOffset), TileType.Grass);
+        fWidthOffset+=fPersistence;
       }
-      hOffset+=0.2;
+      fHeightOffset+=fPersistence;
     }
+  }
+
+  public void drawTiles() {
+    float fVal;
+    for (int y = 0; y < CHUNK_SIZE; y++) 
+      for (int x = 0; x < CHUNK_SIZE; x++) 
+        if (TILE_SIZE * (vTopLeft.x - nPlayerX + x + 1) > 0 && TILE_SIZE * (vTopLeft.x - nPlayerX + x) < width && TILE_SIZE * (vTopLeft.y  - nPlayerY + y + 1) > 0 && TILE_SIZE * (vTopLeft.y  - nPlayerY + y) < height) {
+          fVal = arTiles[y][x].fDepth;
+          if (arTiles[y][x].tileType==TileType.Grass) {
+            fill(0, map(fVal, 0, 1, 255, 0), 0);
+          } else if (arTiles[y][x].tileType==TileType.Tree) {
+            fill(0, 0, 255);
+          }
+          rect(TILE_SIZE * (vTopLeft.x - nPlayerX + x), TILE_SIZE * (vTopLeft.y  - nPlayerY + y), TILE_SIZE, TILE_SIZE);
+        }
+    drawChunkLines();
+  }
+
+  void drawChunkLines() {
+    strokeWeight(3);
+    stroke(255, 0, 0);//Factored out TILE_SIZE for math below
+    line(TILE_SIZE * (vTopLeft.x - nPlayerX             ), TILE_SIZE * (vTopLeft.y - nPlayerY             ), TILE_SIZE * (vTopLeft.x - nPlayerX + CHUNK_SIZE), TILE_SIZE * (vTopLeft.y - nPlayerY             ));
+    line(TILE_SIZE * (vTopLeft.x - nPlayerX             ), TILE_SIZE * (vTopLeft.y - nPlayerY             ), TILE_SIZE * (vTopLeft.x - nPlayerX             ), TILE_SIZE * (vTopLeft.y - nPlayerY + CHUNK_SIZE));
+    line(TILE_SIZE * (vTopLeft.x - nPlayerX + CHUNK_SIZE), TILE_SIZE * (vTopLeft.y - nPlayerY             ), TILE_SIZE * (vTopLeft.x - nPlayerX + CHUNK_SIZE), TILE_SIZE * (vTopLeft.y - nPlayerY + CHUNK_SIZE));
+    line(TILE_SIZE * (vTopLeft.x - nPlayerX             ), TILE_SIZE * (vTopLeft.y - nPlayerY + CHUNK_SIZE), TILE_SIZE * (vTopLeft.x - nPlayerX + CHUNK_SIZE), TILE_SIZE * (vTopLeft.y - nPlayerY + CHUNK_SIZE));
+    stroke(0);
+    strokeWeight(1);
   }
 }
 
-static class Tile {
-  public static int TILE_WIDTH = 20, TILE_HEIGHT = 20;
-  int x, y;
-  float depth;
-  TileType TileType;
-  Tile(float depth, int x, int y, TileType TileType) {
-    this.depth = depth;
-    this.x = x;
-    this.y = y;
-    this.TileType = TileType;
+public PVector getChunkIndices(PVector vCur) {
+  int nX = int(vCur.x - (vCur.x % CHUNK_SIZE));
+  int nY = int(vCur.y - (vCur.y % CHUNK_SIZE));
+  return new PVector(vCur.x < 0 ? nX - CHUNK_SIZE : nX, vCur.y < 0 ? nY - CHUNK_SIZE : nY);
+}
+
+class Tile {
+  float fDepth;
+  TileType tileType;
+  Tile(float fDepth, TileType tileType) {
+    this.fDepth = fDepth;
+    this.tileType = tileType;
   }
 }
 
