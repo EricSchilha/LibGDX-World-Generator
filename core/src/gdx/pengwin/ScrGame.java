@@ -9,6 +9,8 @@ public class ScrGame extends GameScreen {
     protected static Texture txButtonUp = new Texture(Gdx.files.internal("GameButtonUp.png"));
     protected static Texture txButtonDown = new Texture(Gdx.files.internal("GameButtonDown.png"));
     protected Map mapMap;
+    boolean showButtons = false;
+    int nKeyCode;
     public ScrGame(GamMain gamMain) { //Would like to move the code from here into GameScreen constructor
         super.screenType = this.screenType;
         super.txButtonUp = this.txButtonUp;
@@ -29,10 +31,39 @@ public class ScrGame extends GameScreen {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         batch.begin();
         batch.setProjectionMatrix(oc.combined);
+        translate();
         mapMap.draw(batch);
-        for (Button button : alButtons)
-            if (button.screenType != screenType)
-                button.draw(batch);
+        if (showButtons)
+            for (Button button : alButtons)
+                if (button.screenType != screenType)
+                    button.draw(batch);
         batch.end();
+    }
+
+    public void translate() {
+        if (nKeyCode == 19) {//UP
+            mapMap.player.setY(mapMap.player.getY() - 1);
+        } else if (nKeyCode == 20) {//DOWN
+            mapMap.player.setY(mapMap.player.getY() + 1);
+        } else if (nKeyCode == 21) {//LEFT
+            mapMap.player.setX(mapMap.player.getX() - 1);
+        } else if (nKeyCode == 22) {//RIGHT
+            mapMap.player.setX(mapMap.player.getX() + 1);
+        }
+    }
+
+    @Override
+    public boolean keyDown(int keyCode) {
+        nKeyCode = keyCode;
+        if (keyCode == 131) {//ESC
+            showButtons = !showButtons;
+        }
+        return false;
+    }
+
+    @Override
+    public boolean keyUp(int keyCode) {
+        nKeyCode = 0;
+        return false;
     }
 }

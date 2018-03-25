@@ -8,8 +8,7 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import java.util.HashMap;
 
 public class Tile extends Sprite {
-    public static int TILE_WIDTH = 32; //In pixels
-    public static int TILE_HEIGHT = 32;
+    public static int TILE_SIZE = 32; //In pixels
     public static HashMap<TileType, Texture> txmTile = new HashMap<TileType, Texture>() {{
         put(TileType.Water, new Texture(Gdx.files.internal("WaterTile.png")));
         put(TileType.Grass, new Texture(Gdx.files.internal("GrassTile.png")));
@@ -19,7 +18,7 @@ public class Tile extends Sprite {
     TileType tileType;
 
     public Tile(TileType tileType) {
-        super(txmTile.get(tileType), TILE_WIDTH, TILE_HEIGHT);
+        super(txmTile.get(tileType), TILE_SIZE, TILE_SIZE);
         this.tileType = tileType;
     }
 

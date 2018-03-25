@@ -1,50 +1,46 @@
 package gdx.pengwin;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 
 public class Chunk {
-    public static /*final*/ int CHUNK_WIDTH = 32;
-    public static /*final*/ int CHUNK_HEIGHT = 32;
+    public static /*final*/ int CHUNK_SIZE = 32;
 
     public Object[][] arobjObjects; //Stores the other things on the map (trees, rocks, etc.)
     public Tile[][] artilTiles;
     public static Noise noise = new Noise();
     Vector2 vTopLeft;
-    Vector2 vBottomRight;
-    public int nX, nY;
 
     public Chunk(int nX, int nY) {
-        this.artilTiles = new Tile[CHUNK_HEIGHT][CHUNK_WIDTH];
-        this.arobjObjects = new Object[CHUNK_HEIGHT][CHUNK_WIDTH];
-        this.nX = nX;
-        this.nY = nY;
-        //vTopLeft = this.getMapArrayIndices(new Vector2(nX - (Gdx.graphics.getWidth() / 2), nY - (Gdx.graphics.getHeight() / 2)));
-        //vBottomRight = this.getMapArrayIndices(new Vector2(nX + (Gdx.graphics.getWidth() / 2) + Tile.TILE_WIDTH * 2, nY + (Gdx.graphics.getHeight() / 2) + Tile.TILE_WIDTH * 2));
+        this.artilTiles = new Tile[CHUNK_SIZE][CHUNK_SIZE];
+        this.arobjObjects = new Object[CHUNK_SIZE][CHUNK_SIZE];
+        vTopLeft = new Vector2(nX, nY);
         generateTileMap();
         //generateObjectMap();
     }
 
     public void generateTileMap() {
-        float fHeightOffset = 0;
         float fWidthOffset = 0;
+        float fHeightOffset = 0;
+        float fPersistence = (float) 0.05;
         for (int y = 0; y < artilTiles.length; y++) {
-            fWidthOffset = 0;
             for (int x = 0; x < artilTiles[y].length; x++) {
-                double dNoiseVal = noise.noise(fWidthOffset, fHeightOffset);
-                fWidthOffset += 0.1;
-                artilTiles[y][x] = (dNoiseVal < 0.35) ? new Tile(TileType.Water) :
-                        (dNoiseVal < 0.65 ? new Tile(TileType.Grass) :
-                                new Tile(TileType.Mountain));
+                double dNoiseVal = noise.noise(vTopLeft.x * fPersistence + fWidthOffset, vTopLeft.y * fPersistence + fHeightOffset);
+                fWidthOffset += fPersistence;
+                artilTiles[y][x] = (dNoiseVal < 0.35) ? new Tile(TileType.Water) : (dNoiseVal < 0.65 ? new Tile(TileType.Grass) : new Tile(TileType.Mountain));
             }
-            fHeightOffset += 0.1;
+            fWidthOffset = 0;
+            fHeightOffset += fPersistence;
         }
     }
 
-    public void draw(int nX, int nY, SpriteBatch batch) {
+    public void draw(SpriteBatch batch, Player player) {
         for (int y = 0; y < artilTiles.length; y++) {
             for (int x = 0; x < artilTiles[y].length; x++) {
-                artilTiles[y][x].draw(batch, (float) (nX + (x * artilTiles[y][x].TILE_WIDTH)), (float) (nY + (y * artilTiles[y][x].TILE_HEIGHT)));
+                if (artilTiles[y][x].TILE_SIZE * (vTopLeft.x - player.getX() + x + 1) > 0 && artilTiles[y][x].TILE_SIZE * (vTopLeft.x - player.getX() + x) < Gdx.graphics.getWidth() && artilTiles[y][x].TILE_SIZE * (vTopLeft.y - player.getY() + y + 1) > 0 && artilTiles[y][x].TILE_SIZE * (vTopLeft.y - player.getY() + y) < Gdx.graphics.getHeight()) {
+                    artilTiles[y][x].draw(batch, artilTiles[y][x].TILE_SIZE * (vTopLeft.x - player.getX() + x), artilTiles[y][x].TILE_SIZE * (vTopLeft.y - player.getY() + y));
+                }
             }
         }
 //        Vector2 vTopLeft = this.getMapArrayIndices(new Vector2(nX - (Gdx.graphics.getWidth() / 2), nY - (Gdx.graphics.getHeight() / 2)));
@@ -86,10 +82,4 @@ public class Chunk {
 //        }
     }
 
-    public Vector2 getMapArrayIndices(Vector2 vPos) {
-        int nX = (int) (vPos.y / Tile.TILE_HEIGHT);
-        int nY = (int) (vPos.x / Tile.TILE_WIDTH);
-
-        return new Vector2(nX, nY);
-    }
 }
