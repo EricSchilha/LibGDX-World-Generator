@@ -2,10 +2,11 @@ package gdx.pengwin;
 
 public class Player {
     private int nX, nY;
+    private int nMinDivisor = 4096;
 
     public Player() {
-        this.nX = 0;
-        this.nY = 0;
+        this.nX = (int) (Math.random() * Integer.MAX_VALUE / nMinDivisor + Integer.MAX_VALUE / nMinDivisor / 2);
+        this.nY = (int) (Math.random() * Integer.MAX_VALUE / nMinDivisor + Integer.MAX_VALUE / nMinDivisor / 2);
     }
 
     public int getX() {

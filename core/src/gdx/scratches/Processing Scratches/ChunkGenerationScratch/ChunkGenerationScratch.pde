@@ -1,19 +1,24 @@
-int nPlayerX = 0, nPlayerY = 0;
+int nPlayerX, nPlayerY;
 private int CHUNK_SIZE = 32;
 private int TILE_SIZE;
 static int nScale = 20;
+int nMinDivisor = 4096; //Used for testing boundaries, startX and startY range from nMinDivisor*64 to nMinDivisor*192 with 4096
 Map mapMap;
 public void setup() {
   size(2000, 1200);
   mapMap = new Map();
   surface.setResizable(true);
+  nPlayerX = (int)random(MAX_INT/nMinDivisor - MAX_INT/nMinDivisor/2, MAX_INT/nMinDivisor + MAX_INT/nMinDivisor/2);
+  nPlayerY = (int)random(MAX_INT/nMinDivisor - MAX_INT/nMinDivisor/2, MAX_INT/nMinDivisor + MAX_INT/nMinDivisor/2);
+  //nPlayerX = (int)MAX_INT/nMinDivisor; //FOR TESTING
+  //nPlayerY = (int)MAX_INT/nMinDivisor;
 }
 
 void draw() {
   background(255);
   resizeTiles();
   mapMap.drawChunks();
-  //println(nPlayerX + "\t" + nPlayerY);
+  println(nPlayerX + "\t" + nPlayerY);
   if (keyPressed && key==CODED) {
     if (keyCode == UP) {
       nPlayerY--;
@@ -32,12 +37,14 @@ void resizeTiles() {
 }
 
 class Map {
-  ArrayList<Chunk> alChunks = new ArrayList<Chunk>();
   Chunk[][] arChunks = new Chunk[5][5];
   public Map() {
+    PVector vPlayerChunk = getChunkIndices(new PVector(nPlayerX, nPlayerY));
+    int nPlayerChunkX = (int)vPlayerChunk.x;
+    int nPlayerChunkY = (int)vPlayerChunk.y;
     for (int y = 0; y < arChunks.length; y++) 
       for (int x = 0; x < arChunks[y].length; x++) 
-        arChunks[y][x] = new Chunk(CHUNK_SIZE * (x - ((arChunks[y].length-1)/2)), CHUNK_SIZE * (y - ((arChunks.length-1)/2)));
+        arChunks[y][x] = new Chunk(nPlayerChunkX - CHUNK_SIZE * (x - ((arChunks[y].length-1)/2)), nPlayerChunkY - CHUNK_SIZE * (y - ((arChunks.length-1)/2)));
   }
 
   public void drawChunks() {

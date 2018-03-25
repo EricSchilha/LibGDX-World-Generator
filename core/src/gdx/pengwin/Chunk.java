@@ -43,43 +43,6 @@ public class Chunk {
                 }
             }
         }
-//        Vector2 vTopLeft = this.getMapArrayIndices(new Vector2(nX - (Gdx.graphics.getWidth() / 2), nY - (Gdx.graphics.getHeight() / 2)));
-//        Vector2 vBottomRight = this.getMapArrayIndices(new Vector2(nX + (Gdx.graphics.getWidth() / 2) + Tile.TILE_WIDTH * 2, nY + (Gdx.graphics.getHeight() / 2) + Tile.TILE_HEIGHT * 2));
-//        System.out.println(vTopLeft.x + "\t" + vTopLeft.y);
-//        System.out.println(vTopLeft.x + "\t" + vTopLeft.y);
-//        if (vTopLeft.x < 0)
-//            vTopLeft.x = 0;
-//        if (vTopLeft.y < 0)
-//            vTopLeft.y = 0;
-//        if (vBottomRight.x < 0)
-//            vBottomRight.x = 0;
-//        if (vBottomRight.y < 0)
-//            vBottomRight.y = 0;
-//
-//        for (int y = (int) vTopLeft.y; y < (int) vBottomRight.y / (float) (CHUNK_WIDTH / Tile.TILE_WIDTH); y++) {
-//            for (int x = (int) vTopLeft.x; x < (int) vBottomRight.x / (float) (CHUNK_HEIGHT / Tile.TILE_HEIGHT); x++) {
-//                TileType tileType = artilTiles[y][x].tileType;
-//                //ObjectType objectType = arobjObjects[y][x].objectType;
-//
-//                switch (tileType) { // Redundancy only temporary
-//                    case Grass:
-//                        artilTiles[y][x].draw(batch, (float) (nX + (x * Tile.TILE_WIDTH)), (float) (nY + (y * Tile.TILE_HEIGHT)));
-//                        break;
-//                    case Water:
-//                        artilTiles[y][x].draw(batch, (float) (nX + (x * Tile.TILE_WIDTH)), (float) (nY + (y * Tile.TILE_HEIGHT)));
-//                        break;
-//                    case Mountain:
-//                        artilTiles[y][x].draw(batch, (float) (nX + (x * Tile.TILE_WIDTH)), (float) (nY + (y * Tile.TILE_HEIGHT)));
-//                        break;
-//                }
-//
-//                /*switch (objectType) {
-//                    case Tree:
-//                        arobjObjects[y][x].draw(batch, (float) (nX + (x * Tile.TILE_WIDTH)), (float) (nY + (y * Tile.TILE_HEIGHT)));
-//                        break;
-//                }*/
-//            }
-//        }
     }
 
 }
