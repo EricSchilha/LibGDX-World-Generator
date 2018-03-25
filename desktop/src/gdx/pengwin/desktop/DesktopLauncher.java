@@ -2,7 +2,6 @@ package gdx.pengwin.desktop;
 
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
-import gdx.pengwin.GamMain;
 
 public class DesktopLauncher {
     public static LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
@@ -12,6 +11,6 @@ public class DesktopLauncher {
         config.width = 800;
         config.height = 800;
         //config.resizable = false;
-        new LwjglApplication(new GamMain(), config);
-	}
+        new LwjglApplication(new gdx.pengwin.Release2_0.GamMain(), config);
+    }
 }
