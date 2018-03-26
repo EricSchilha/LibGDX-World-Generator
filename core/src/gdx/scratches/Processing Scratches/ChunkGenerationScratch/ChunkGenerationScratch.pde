@@ -5,7 +5,7 @@ static int nScale = 20;
 int nMinDivisor = 4096; //Used for testing boundaries, startX and startY range from nMinDivisor*64 to nMinDivisor*192 with 4096
 Map mapMap;
 public void setup() {
-  size(2000, 1200);
+  size(1200, 800);
   mapMap = new Map();
   surface.setResizable(true);
   nPlayerX = (int)random(MAX_INT/nMinDivisor - MAX_INT/nMinDivisor/2, MAX_INT/nMinDivisor + MAX_INT/nMinDivisor/2);
