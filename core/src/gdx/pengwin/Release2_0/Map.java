@@ -28,7 +28,7 @@ public class Map {
     }
 
     public void updateMap() {
-        Vector2 vPlayerChunk = getChunkIndices(new Vector2(player.getPlayerX(), player.getPlayerY()));
+        Vector2 vPlayerChunk = getChunkIndices(new Vector2((float) player.getPlayerX(), (float) player.getPlayerY()));
         if (arChunks[arChunks[arChunks.length / 2].length / 2][arChunks.length / 2].vTopLeft.x == vPlayerChunk.x && arChunks[arChunks[arChunks.length / 2].length / 2][arChunks.length / 2].vTopLeft.y == vPlayerChunk.y) {
             return;
         }

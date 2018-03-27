@@ -32,11 +32,11 @@ public class Chunk {
                 double dNoiseVal = noise.noise(vTopLeft.x * fPersistence + fWidthOffset, vTopLeft.y * fPersistence + fHeightOffset);
                 fWidthOffset += fPersistence;
                 artilTiles[y][x] = (dNoiseVal < 0.35) ? new Tile(TileType.Water) : (dNoiseVal < 0.65 ? new Tile(TileType.Grass) : new Tile(TileType.Mountain));
-                if (x % 3 == 0 && y % 3 == 0) {
+                if (x % 2 == 0 && y % 2 == 0) {
                     if (artilTiles[y][x].tileType == TileType.Grass) {
                         try {
-                            int nTreeX = randObj.nextInt(5) - 2;
-                            int nTreeY = randObj.nextInt(5) - 2;
+                            int nTreeX = randObj.nextInt(3) - 1;
+                            int nTreeY = randObj.nextInt(3) - 1;
                             if (artilTiles[y + nTreeY][x + nTreeX].tileType == TileType.Grass) {
                                 arobjObjects[y + nTreeY][x + nTreeX] = new Object(ObjectType.Tree);
                             }
@@ -54,9 +54,9 @@ public class Chunk {
         for (int y = 0; y < artilTiles.length; y++) {
             for (int x = 0; x < artilTiles[y].length; x++) {
                 if (artilTiles[y][x].TILE_SIZE * (vTopLeft.x - player.getPlayerX() + x + 1) > 0 && artilTiles[y][x].TILE_SIZE * (vTopLeft.x - player.getPlayerX() + x) < Gdx.graphics.getWidth() && artilTiles[y][x].TILE_SIZE * (vTopLeft.y - player.getPlayerY() + y + 1) > 0 && artilTiles[y][x].TILE_SIZE * (vTopLeft.y - player.getPlayerY() + y) < Gdx.graphics.getHeight()) {
-                    artilTiles[y][x].draw(batch, artilTiles[y][x].TILE_SIZE * (vTopLeft.x - player.getPlayerX() + x), artilTiles[y][x].TILE_SIZE * (vTopLeft.y - player.getPlayerY() + y));
+                    artilTiles[y][x].draw(batch, (float) (artilTiles[y][x].TILE_SIZE * (vTopLeft.x - player.getPlayerX() + x)), (float) (artilTiles[y][x].TILE_SIZE * (vTopLeft.y - player.getPlayerY() + y)));
                     if (arobjObjects[y][x] != null) {
-                        arobjObjects[y][x].draw(batch, arobjObjects[y][x].OBJECT_WIDTH * (vTopLeft.x - player.getPlayerX() + x), arobjObjects[y][x].OBJECT_HEIGHT * (vTopLeft.y - player.getPlayerY() + y));
+                        arobjObjects[y][x].draw(batch, (float) (arobjObjects[y][x].OBJECT_WIDTH * (vTopLeft.x - player.getPlayerX() + x)), (float) (arobjObjects[y][x].OBJECT_HEIGHT * (vTopLeft.y - player.getPlayerY() + y)));
                     }
                 }
             }

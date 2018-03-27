@@ -17,7 +17,7 @@ public abstract class GameScreen implements Screen, InputProcessor {
     OrthographicCamera oc;
     ScreenType screenType;
     Texture txButtonUp, txButtonDown;
-    ArrayList<Button> alButtons = new ArrayList<>();
+    ArrayList<Button> alButtons = new ArrayList<Button>();
 
     @Override
     public void show() {

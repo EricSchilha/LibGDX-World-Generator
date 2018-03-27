@@ -43,13 +43,13 @@ public class ScrGame extends GameScreen {
 
     public void translate() {
         if (nKeyCode == 19) {//UP
-            mapMap.player.setY(mapMap.player.getPlayerY() - 1);
+            mapMap.player.setY(mapMap.player.getPlayerY() - 0.1);
         } else if (nKeyCode == 20) {//DOWN
-            mapMap.player.setY(mapMap.player.getPlayerY() + 1);
+            mapMap.player.setY(mapMap.player.getPlayerY() + 0.1);
         } else if (nKeyCode == 21) {//LEFT
-            mapMap.player.setX(mapMap.player.getPlayerX() - 1);
+            mapMap.player.setX(mapMap.player.getPlayerX() - 0.1);
         } else if (nKeyCode == 22) {//RIGHT
-            mapMap.player.setX(mapMap.player.getPlayerX() + 1);
+            mapMap.player.setX(mapMap.player.getPlayerX() + 0.1);
         }
     }
 
