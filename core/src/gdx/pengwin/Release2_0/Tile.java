@@ -26,4 +26,8 @@ public class Tile extends Sprite {
         setPosition(fX, fY);
         super.draw(batch);
     }
+
+    public static void resize() { //FIX THIS LATER
+        TILE_SIZE = (Gdx.graphics.getWidth() + Gdx.graphics.getHeight()) / Chunk.CHUNK_SIZE; //In pixels
+    }
 }

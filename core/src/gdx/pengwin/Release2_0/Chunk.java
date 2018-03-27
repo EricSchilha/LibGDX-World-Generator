@@ -32,8 +32,17 @@ public class Chunk {
                 double dNoiseVal = noise.noise(vTopLeft.x * fPersistence + fWidthOffset, vTopLeft.y * fPersistence + fHeightOffset);
                 fWidthOffset += fPersistence;
                 artilTiles[y][x] = (dNoiseVal < 0.35) ? new Tile(TileType.Water) : (dNoiseVal < 0.65 ? new Tile(TileType.Grass) : new Tile(TileType.Mountain));
-                if (artilTiles[y][x].tileType == TileType.Grass) {
-                    arobjObjects[y][x] = (randObj.nextInt() % 25 == 0) ? new Object(ObjectType.Tree) : null;
+                if (x % 3 == 0 && y % 3 == 0) {
+                    if (artilTiles[y][x].tileType == TileType.Grass) {
+                        try {
+                            int nTreeX = randObj.nextInt(5) - 2;
+                            int nTreeY = randObj.nextInt(5) - 2;
+                            if (artilTiles[y + nTreeY][x + nTreeX].tileType == TileType.Grass) {
+                                arobjObjects[y + nTreeY][x + nTreeX] = new Object(ObjectType.Tree);
+                            }
+                        } catch (Exception e) {
+                        }
+                    }
                 }
             }
             fWidthOffset = 0;

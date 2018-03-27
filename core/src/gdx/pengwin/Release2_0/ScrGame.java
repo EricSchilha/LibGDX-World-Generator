@@ -32,6 +32,7 @@ public class ScrGame extends GameScreen {
         batch.begin();
         batch.setProjectionMatrix(oc.combined);
         translate();
+        //Tile.resize();
         mapMap.draw(batch);
         if (showButtons)
             for (Button button : alButtons)

@@ -24,7 +24,7 @@ public class Map {
         for (Chunk arChunk[] : arChunks)
             for (Chunk chunk : arChunk)
                 chunk.draw(batch, player);
-        player.draw(batch, 0, 0);
+        player.draw(batch);
     }
 
     public void updateMap() {
@@ -43,7 +43,7 @@ public class Map {
     public Vector2 getChunkIndices(Vector2 vPos) {
         int nX = (int) (vPos.x - (vPos.x % Chunk.CHUNK_SIZE));
         int nY = (int) (vPos.y - (vPos.y % Chunk.CHUNK_SIZE));
-        nX = vPos.x < 0 ? nX - Chunk.CHUNK_SIZE : nX;
+        nX = vPos.x < 0 ? nX - Chunk.CHUNK_SIZE : nX; //Probably don't need these
         nY = vPos.y < 0 ? nY - Chunk.CHUNK_SIZE : nY;
         return new Vector2(nX, nY);
     }

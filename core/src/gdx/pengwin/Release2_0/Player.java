@@ -17,7 +17,8 @@ public class Player extends Sprite {
         this.nY = (int) (Math.random() * Integer.MAX_VALUE / nMinDivisor + Integer.MAX_VALUE / nMinDivisor / 2);
     }
 
-    public void draw(SpriteBatch batch, int nX, int nY) {
+    public void draw(SpriteBatch batch) {
+        //System.out.println(this.nX + "\t" + this.nY); //Use this to track player movements
         int nMiddleX = Tile.TILE_SIZE * 8;
         int nMiddleY = Tile.TILE_SIZE * 8;
         setPosition(nMiddleX, nMiddleY + Tile.TILE_SIZE);
