@@ -25,6 +25,23 @@ public class Player extends Sprite {
         super.draw(batch);
     }
 
+    public void move(Direction direction) {
+        switch (direction) {
+            case NORTH:
+                setY(dY - 0.05);
+                break;
+            case SOUTH:
+                setY(dY + 0.05);
+                break;
+            case EAST:
+                setX(dX + 0.05);
+                break;
+            case WEST:
+                setX(dX - 0.05);
+                break;
+        }
+    }
+
     public double getPlayerX() {
         return dX;
     }
@@ -39,5 +56,9 @@ public class Player extends Sprite {
 
     public void setY(double dY) {
         this.dY = dY;
+    }
+
+    enum Direction {
+        NORTH, SOUTH, EAST, WEST
     }
 }

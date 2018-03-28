@@ -1,6 +1,7 @@
 package gdx.pengwin.Release2_0;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 
@@ -16,7 +17,9 @@ public class ScrGame extends GameScreen {
         super.screenType = this.screenType;
         super.txButtonUp = this.txButtonUp;
         super.txButtonDown = this.txButtonDown;
+        mapMap = new Map(0);
         this.gamMain = gamMain;
+        arkKeysPressed = new int[2];
     }
 
     @Override
@@ -42,32 +45,43 @@ public class ScrGame extends GameScreen {
     }
 
     public void translate() {
-        if (nKeyCode == 19) {//UP
-            mapMap.player.setY(mapMap.player.getPlayerY() - 0.1);
-        } else if (nKeyCode == 20) {//DOWN
-            mapMap.player.setY(mapMap.player.getPlayerY() + 0.1);
-        } else if (nKeyCode == 21) {//LEFT
-            mapMap.player.setX(mapMap.player.getPlayerX() - 0.1);
-        } else if (nKeyCode == 22) {//RIGHT
-            mapMap.player.setX(mapMap.player.getPlayerX() + 0.1);
+        if (arkKeysPressed[0] == Input.Keys.W || arkKeysPressed[0] == Input.Keys.UP) {//UP
+            mapMap.player.move(Player.Direction.NORTH);
+        } else if (arkKeysPressed[0] == Input.Keys.S || arkKeysPressed[0] == Input.Keys.DOWN) {//DOWN
+            mapMap.player.move(Player.Direction.SOUTH);
+        }
+        if (arkKeysPressed[1] == Input.Keys.A || arkKeysPressed[1] == Input.Keys.LEFT) {//LEFT
+            mapMap.player.move(Player.Direction.WEST);
+        } else if (arkKeysPressed[1] == Input.Keys.D || arkKeysPressed[1] == Input.Keys.RIGHT) {//RIGHT
+            mapMap.player.move(Player.Direction.EAST);
         }
     }
 
     @Override
     public boolean keyDown(int keyCode) {
-        nKeyCode = keyCode;
-        if (keyCode == 131) {//ESC
-            showButtons = !showButtons;
+        switch (keyCode) {
+            case Input.Keys.W:
+            case Input.Keys.S:
+            case Input.Keys.UP:
+            case Input.Keys.DOWN:
+                arkKeysPressed[0] = keyCode;
+                break;
+            case Input.Keys.A:
+            case Input.Keys.D:
+            case Input.Keys.LEFT:
+            case Input.Keys.RIGHT:
+                arkKeysPressed[1] = keyCode;
+                break;
         }
         return false;
     }
 
     @Override
     public boolean keyUp(int keyCode) {
-        nKeyCode = 0;
+        arkKeysPressed[0] = (arkKeysPressed[0] == keyCode) ? 0 : arkKeysPressed[0];
+        arkKeysPressed[1] = (arkKeysPressed[1] == keyCode) ? 1 : arkKeysPressed[1];
         return false;
     }
-
 
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int mouseButton) {
