@@ -7,19 +7,19 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import java.util.HashMap;
 
-public class Object extends Sprite {
+public class SprNPO extends Sprite {
     public static int OBJECT_WIDTH = (Gdx.graphics.getWidth() + Gdx.graphics.getHeight()) / Chunk.CHUNK_SIZE; //In pixels
     public static int OBJECT_HEIGHT = (Gdx.graphics.getWidth() + Gdx.graphics.getHeight()) / Chunk.CHUNK_SIZE; //In pixels
-    public static HashMap<ObjectType, Texture> txmObject = new HashMap<ObjectType, Texture>() {{
-        put(ObjectType.Tree, new Texture(Gdx.files.internal("Tree1.png")));
+    public static HashMap<NPOType, Texture> txmObject = new HashMap<NPOType, Texture>() {{
+        put(NPOType.Tree, new Texture(Gdx.files.internal("Tree1.png")));
     }};
 
-    ObjectType objectType;
+    NPOType npoType;
 
-    public Object(ObjectType objectType) {
-        super(txmObject.get(objectType));
+    public SprNPO(NPOType npoType) {
+        super(txmObject.get(npoType));
         setSize(OBJECT_WIDTH, -OBJECT_WIDTH);
-        this.objectType = objectType;
+        this.npoType = npoType;
     }
 
     public void draw(SpriteBatch batch, float fX, float fY) {

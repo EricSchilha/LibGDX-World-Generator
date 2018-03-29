@@ -17,7 +17,7 @@ public abstract class GameScreen implements Screen, InputProcessor {
     OrthographicCamera oc;
     ScreenType screenType;
     Texture txButtonUp, txButtonDown;
-    ArrayList<Button> alButtons = new ArrayList<Button>();
+    ArrayList<SprButton> alsprButtons = new ArrayList<SprButton>();
     int[] arkKeysPressed;
 
     @Override
@@ -27,10 +27,10 @@ public abstract class GameScreen implements Screen, InputProcessor {
         oc.setToOrtho(true, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         oc.update();
         batch = new SpriteBatch();
-        alButtons.clear();
-        alButtons.addAll(Arrays.asList(
-                new Button(Button.BUTTON_WIDTH, Button.BUTTON_HEIGHT, 0, Gdx.graphics.getHeight() - Button.BUTTON_HEIGHT, ScrMenu.txButtonUp, ScrMenu.screenType),
-                new Button(Button.BUTTON_WIDTH, Button.BUTTON_HEIGHT, Gdx.graphics.getWidth() - Button.BUTTON_WIDTH, Gdx.graphics.getHeight() - Button.BUTTON_HEIGHT, ScrGame.txButtonUp, ScrGame.screenType)
+        alsprButtons.clear();
+        alsprButtons.addAll(Arrays.asList(
+                new SprButton(SprButton.BUTTON_WIDTH, SprButton.BUTTON_HEIGHT, 0, Gdx.graphics.getHeight() - SprButton.BUTTON_HEIGHT, ScrMenu.txButtonUp, ScrMenu.screenType),
+                new SprButton(SprButton.BUTTON_WIDTH, SprButton.BUTTON_HEIGHT, Gdx.graphics.getWidth() - SprButton.BUTTON_WIDTH, Gdx.graphics.getHeight() - SprButton.BUTTON_HEIGHT, ScrGame.txButtonUp, ScrGame.screenType)
         ));
         Gdx.input.setInputProcessor(this);
     }
@@ -39,9 +39,9 @@ public abstract class GameScreen implements Screen, InputProcessor {
     public void render(float delta) {
         batch.begin();
         batch.setProjectionMatrix(oc.combined);
-        for (Button button : alButtons)
-            if (button.screenType != screenType)
-                button.draw(batch);
+        for (SprButton sprButton : alsprButtons)
+            if (sprButton.screenType != screenType)
+                sprButton.draw(batch);
         batch.end();
     }
 
@@ -49,11 +49,11 @@ public abstract class GameScreen implements Screen, InputProcessor {
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int mouseButton) {
         if (mouseButton == Input.Buttons.LEFT)
-            for (Button button : alButtons)
-                if (button.getBoundingRectangle().contains(screenX, screenY)) {
+            for (SprButton sprButton : alsprButtons)
+                if (sprButton.getBoundingRectangle().contains(screenX, screenY)) {
                     for (GameScreen screen : gamMain.alScreens)
-                        if (screen.screenType == button.screenType)
-                            alButtons.get(alButtons.indexOf(button)).setTexture(screen.txButtonDown);
+                        if (screen.screenType == sprButton.screenType)
+                            alsprButtons.get(alsprButtons.indexOf(sprButton)).setTexture(screen.txButtonDown);
                 }
         return false;
     }
@@ -61,11 +61,11 @@ public abstract class GameScreen implements Screen, InputProcessor {
     @Override
     public boolean touchUp(int screenX, int screenY, int pointer, int mouseButton) {
         if (mouseButton == Input.Buttons.LEFT)
-            for (int i = 0; i < alButtons.size(); i++) //Using the other type of for loop caused an error (java.util.ConcurrentModificationException)
-                if (alButtons.get(i).isPressed)
+            for (int i = 0; i < alsprButtons.size(); i++) //Using the other type of for loop caused an error (java.util.ConcurrentModificationException)
+                if (alsprButtons.get(i).isPressed)
                     for (GameScreen screen : gamMain.alScreens)
-                        if (screen.screenType == alButtons.get(i).screenType) {
-                            alButtons.get(i).setTexture(screen.txButtonDown);
+                        if (screen.screenType == alsprButtons.get(i).screenType) {
+                            alsprButtons.get(i).setTexture(screen.txButtonDown);
                             gamMain.update(screen);
                         }
         return false;

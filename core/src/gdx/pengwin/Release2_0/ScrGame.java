@@ -9,22 +9,21 @@ public class ScrGame extends GameScreen {
     protected static ScreenType screenType = ScreenType.Game;
     protected static Texture txButtonUp = new Texture(Gdx.files.internal("GameButtonUp.png"));
     protected static Texture txButtonDown = new Texture(Gdx.files.internal("GameButtonDown.png"));
-    protected Map mapMap;
+    protected Map map;
     boolean showButtons = false;
-    int nKeyCode;
 
     public ScrGame(GamMain gamMain) { //Would like to move the code from here into GameScreen constructor
         super.screenType = this.screenType;
         super.txButtonUp = this.txButtonUp;
         super.txButtonDown = this.txButtonDown;
-        mapMap = new Map(0);
+        map = new Map(0);
         this.gamMain = gamMain;
         arkKeysPressed = new int[2];
     }
 
     @Override
     public void show() {
-        mapMap = new Map(0);
+        map = new Map(0);
         super.show();
     }
 
@@ -35,30 +34,30 @@ public class ScrGame extends GameScreen {
         batch.begin();
         batch.setProjectionMatrix(oc.combined);
         translate();
-        //Tile.resize();
-        mapMap.draw(batch);
+        //SprTile.resize();
+        map.draw(batch);
         if (showButtons)
-            for (Button button : alButtons)
-                if (button.screenType != screenType)
-                    button.draw(batch);
+            for (SprButton sprButton : alsprButtons)
+                if (sprButton.screenType != screenType)
+                    sprButton.draw(batch);
         batch.end();
     }
 
     public void translate() {
         if (arkKeysPressed[0] == Input.Keys.W || arkKeysPressed[0] == Input.Keys.UP) {//UP
-            mapMap.player.move(Player.Direction.NORTH);
+            map.sprPlayer.move(SprPlayer.Direction.NORTH, map);
         } else if (arkKeysPressed[0] == Input.Keys.S || arkKeysPressed[0] == Input.Keys.DOWN) {//DOWN
-            mapMap.player.move(Player.Direction.SOUTH);
+            map.sprPlayer.move(SprPlayer.Direction.SOUTH, map);
         }
         if (arkKeysPressed[1] == Input.Keys.A || arkKeysPressed[1] == Input.Keys.LEFT) {//LEFT
-            mapMap.player.move(Player.Direction.WEST);
+            map.sprPlayer.move(SprPlayer.Direction.WEST, map);
         } else if (arkKeysPressed[1] == Input.Keys.D || arkKeysPressed[1] == Input.Keys.RIGHT) {//RIGHT
-            mapMap.player.move(Player.Direction.EAST);
+            map.sprPlayer.move(SprPlayer.Direction.EAST, map);
         }
     }
 
     @Override
-    public boolean keyDown(int keyCode) {
+    public boolean keyDown(int keyCode) {   //Want to add keys, directions to a HashMap
         switch (keyCode) {
             case Input.Keys.W:
             case Input.Keys.S:

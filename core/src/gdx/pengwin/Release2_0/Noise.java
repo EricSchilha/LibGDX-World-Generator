@@ -15,7 +15,8 @@ Based off: https://github.com/theDazzler/Infinite-World/blob/master/src/com/devo
 
 
 public class Noise {
-    //From Processing
+
+    //All of the following code is copied from Processing's Perlin Noise
     static final int PERLIN_YWRAPB = 4;
     static final int PERLIN_YWRAP = 16;
     static final int PERLIN_ZWRAPB = 8;

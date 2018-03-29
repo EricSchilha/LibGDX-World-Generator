@@ -6,7 +6,7 @@ import com.badlogic.gdx.math.Vector2;
 public class Map {
     public Chunk[][] arChunks = new Chunk[5][5];
     public int nSeed;
-    public Player player = new Player();
+    public SprPlayer sprPlayer = new SprPlayer();
 
     public Map(int nSeed) {
         this.nSeed = nSeed;
@@ -21,14 +21,16 @@ public class Map {
 
     public void draw(SpriteBatch batch) {
         updateMap();
-        for (Chunk arChunk[] : arChunks)
-            for (Chunk chunk : arChunk)
-                chunk.draw(batch, player);
-        player.draw(batch);
+        for (Chunk arChunk[] : arChunks) {
+            for (Chunk chunk : arChunk) {
+                chunk.draw(batch, sprPlayer);
+            }
+        }
+        sprPlayer.draw(batch);
     }
 
     public void updateMap() {
-        Vector2 vPlayerChunk = getChunkIndices(new Vector2((float) player.getPlayerX(), (float) player.getPlayerY()));
+        Vector2 vPlayerChunk = getChunkIndices(new Vector2((float) sprPlayer.getPlayerX(), (float) sprPlayer.getPlayerY()));
         if (arChunks[arChunks[arChunks.length / 2].length / 2][arChunks.length / 2].vTopLeft.x == vPlayerChunk.x && arChunks[arChunks[arChunks.length / 2].length / 2][arChunks.length / 2].vTopLeft.y == vPlayerChunk.y) {
             return;
         }
