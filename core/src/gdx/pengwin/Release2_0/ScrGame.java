@@ -12,13 +12,14 @@ public class ScrGame extends GameScreen {
     protected Map map;
     boolean showButtons = false;
 
-    public ScrGame(GamMain gamMain) { //Would like to move the code from here into GameScreen constructor
+    public ScrGame(GamMain gamMain) { //TODO: move the code from here into GameScreen constructor (maybe)
+        this.gamMain = gamMain;
         super.screenType = this.screenType;
         super.txButtonUp = this.txButtonUp;
         super.txButtonDown = this.txButtonDown;
+        arnKeys = new int[4];
         map = new Map(0);
-        this.gamMain = gamMain;
-        arkKeysPressed = new int[2];
+
     }
 
     @Override
@@ -33,8 +34,7 @@ public class ScrGame extends GameScreen {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         batch.begin();
         batch.setProjectionMatrix(oc.combined);
-        translate();
-        //SprTile.resize();
+        map.update();
         map.draw(batch);
         if (showButtons)
             for (SprButton sprButton : alsprButtons)
@@ -43,33 +43,24 @@ public class ScrGame extends GameScreen {
         batch.end();
     }
 
-    public void translate() {
-        if (arkKeysPressed[0] == Input.Keys.W || arkKeysPressed[0] == Input.Keys.UP) {//UP
-            map.sprPlayer.move(SprPlayer.Direction.NORTH, map);
-        } else if (arkKeysPressed[0] == Input.Keys.S || arkKeysPressed[0] == Input.Keys.DOWN) {//DOWN
-            map.sprPlayer.move(SprPlayer.Direction.SOUTH, map);
-        }
-        if (arkKeysPressed[1] == Input.Keys.A || arkKeysPressed[1] == Input.Keys.LEFT) {//LEFT
-            map.sprPlayer.move(SprPlayer.Direction.WEST, map);
-        } else if (arkKeysPressed[1] == Input.Keys.D || arkKeysPressed[1] == Input.Keys.RIGHT) {//RIGHT
-            map.sprPlayer.move(SprPlayer.Direction.EAST, map);
-        }
-    }
-
     @Override
-    public boolean keyDown(int keyCode) {   //Want to add keys, directions to a HashMap
+    public boolean keyDown(int keyCode) {   //TODO: add (keys, directions) to a HashMap
         switch (keyCode) {
             case Input.Keys.W:
-            case Input.Keys.S:
             case Input.Keys.UP:
+                arnKeys[0] = 1;
+                break;
+            case Input.Keys.S:
             case Input.Keys.DOWN:
-                arkKeysPressed[0] = keyCode;
+                arnKeys[1] = 1;
                 break;
             case Input.Keys.A:
-            case Input.Keys.D:
             case Input.Keys.LEFT:
+                arnKeys[2] = 1;
+                break;
+            case Input.Keys.D:
             case Input.Keys.RIGHT:
-                arkKeysPressed[1] = keyCode;
+                arnKeys[3] = 1;
                 break;
         }
         return false;
@@ -77,8 +68,24 @@ public class ScrGame extends GameScreen {
 
     @Override
     public boolean keyUp(int keyCode) {
-        arkKeysPressed[0] = (arkKeysPressed[0] == keyCode) ? 0 : arkKeysPressed[0];
-        arkKeysPressed[1] = (arkKeysPressed[1] == keyCode) ? 1 : arkKeysPressed[1];
+        switch (keyCode) {
+            case Input.Keys.W:
+            case Input.Keys.UP:
+                arnKeys[0] = 0;
+                break;
+            case Input.Keys.S:
+            case Input.Keys.DOWN:
+                arnKeys[1] = 0;
+                break;
+            case Input.Keys.A:
+            case Input.Keys.LEFT:
+                arnKeys[2] = 0;
+                break;
+            case Input.Keys.D:
+            case Input.Keys.RIGHT:
+                arnKeys[3] = 0;
+                break;
+        }
         return false;
     }
 

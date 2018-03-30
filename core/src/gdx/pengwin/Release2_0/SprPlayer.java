@@ -6,17 +6,22 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 
+import java.util.Arrays;
+
 public class SprPlayer extends Sprite {
     private double dX, dY;
     private int nMinDivisor = 4096;
-    private double dSpeed = 0.05;
+    private double dSpeed = 0.1;
     public static Texture txPlayer = new Texture(Gdx.files.internal("Dude1.png"));
+    int[] arnKeys;
+    int nVertMovement = 0, nHoriMovement = 0;
 
     public SprPlayer() {
         super(txPlayer);
         setSize(SprTile.TILE_SIZE, -SprTile.TILE_SIZE);
         this.dX = (int) (Math.random() * Integer.MAX_VALUE / nMinDivisor + Integer.MAX_VALUE / nMinDivisor / 2);
         this.dY = (int) (Math.random() * Integer.MAX_VALUE / nMinDivisor + Integer.MAX_VALUE / nMinDivisor / 2);
+        this.arnKeys = Arrays.copyOf(ScrGame.arnKeys, ScrGame.arnKeys.length);
     }
 
     public void draw(SpriteBatch batch) {
@@ -27,51 +32,69 @@ public class SprPlayer extends Sprite {
         super.draw(batch);
     }
 
-    public boolean canMove(Direction direction, Map map) {
-        double dNewX = dX, dNewY = dY;
-        switch (direction) {
-            case NORTH:
-                dNewY -= dSpeed;
-                break;
-            case SOUTH:
-                dNewY += dSpeed;
-                break;
-            case EAST:
-                dNewX += dSpeed;
-                break;
-            case WEST:
-                dNewX -= dSpeed;
-                break;
+    public void move(Map map) {
+        arnKeys = Arrays.copyOf(ScrGame.arnKeys, ScrGame.arnKeys.length);
+        nVertMovement = arnKeys[1] - arnKeys[0];
+        nHoriMovement = arnKeys[3] - arnKeys[2];
+        if ((nVertMovement == -1 && canMove(Direction.NORTH, map)) || (nVertMovement == 1 && canMove(Direction.SOUTH, map))) {
+            setY(dY + nVertMovement * dSpeed);
         }
-        Vector2 vTopLeftPlayer = map.getChunkIndices(new Vector2((float) dNewX, (float) dNewY));
-        Chunk playerChunk = new Chunk((int) vTopLeftPlayer.x, (int) vTopLeftPlayer.y);    //need to populate?
-
-        int nTileX = (int) (dNewX - playerChunk.vTopLeft.x);
-        int nTileY = (int) (dNewY - playerChunk.vTopLeft.y);
-        SprNPO sprHit = playerChunk.arsprNPO[nTileY][nTileX];
-        System.out.println("Player X: " + dNewX + "\tPlayer Y: " + dNewY + "\tTile X: " + nTileX + "\tTile Y: " + nTileY);
-        if (sprHit != null) {
-            return false;
+        if ((nHoriMovement == -1 && canMove(Direction.EAST, map)) || (nHoriMovement == 1 && canMove(Direction.WEST, map))) {
+            setX(dX + nHoriMovement * dSpeed);
         }
-        return true;
     }
 
-    public void move(Direction direction, Map map) {
-        if (!canMove(direction, map)) return;
-        switch (direction) {
-            case NORTH:
-                setY(dY - dSpeed);
-                break;
-            case SOUTH:
-                setY(dY + dSpeed);
-                break;
-            case EAST:
-                setX(dX + dSpeed);
-                break;
-            case WEST:
-                setX(dX - dSpeed);
-                break;
+    //TODO: I don't like this code, but it works. I might try to improve it later.
+    boolean canMove(Direction direction, Map map) {
+        SprNPO[][] arsprNPO = map.arChunks[map.arChunks.length / 2][map.arChunks.length / 2].arsprNPO;
+        try {
+            double dNewX = dX, dNewY = dY;
+            if (direction == Direction.NORTH || direction == Direction.SOUTH) {
+                dNewY += nVertMovement * dSpeed / 2;
+            } else if (direction == Direction.EAST || direction == Direction.WEST) {
+                dNewX += nHoriMovement * dSpeed / 2;
+            }
+            Vector2 vTopLeft = map.getChunkIndices(new Vector2((float) dNewX, (float) dNewY));
+            for (Chunk[] arChunk : map.arChunks) {
+                for (Chunk chunk : arChunk) {
+                    if (chunk.vTopLeft == vTopLeft) {
+                        arsprNPO = chunk.arsprNPO;
+                        break;
+                    }
+                }
+            }
+            int nTileX, nTileY;
+            nTileX = (int) dNewX;
+            nTileY = (int) dNewY;
+            if (arsprNPO[nTileY][nTileX] != null) return false;
+            if (dNewX % 1 > dSpeed / 2) {
+                try {
+                    if (arsprNPO[nTileY][nTileX + 1] != null) return false;
+                } catch (Exception e) {
+                    return false;
+                }
+                if (dNewY % 1 > dSpeed / 2) {
+                    try {
+                        if (arsprNPO[nTileY + 1][nTileX] != null) return false;
+                    } catch (Exception e) {
+                        return false;
+                    }
+                    try {
+                        if (arsprNPO[nTileY + 1][nTileX + 1] != null) return false;
+                    } catch (Exception e) {
+                        return false;
+                    }
+                }
+            } else if (dNewY % 1 > dSpeed / 2) {
+                try {
+                    if (arsprNPO[nTileY + 1][nTileX] != null) return false;
+                } catch (Exception e) {
+                    return false;
+                }
+            }
+        } catch (Exception e) {
         }
+        return true;
     }
 
     public double getPlayerX() {

@@ -19,27 +19,26 @@ public class Map {
                 arChunks[y][x] = new Chunk(Chunk.CHUNK_SIZE * (x - ((arChunks[y].length - 1) / 2)), Chunk.CHUNK_SIZE * (y - ((arChunks.length - 1) / 2)));
     }
 
+
+    public void update() {
+        Vector2 vPlayerChunk = getChunkIndices(new Vector2((float) sprPlayer.getPlayerX(), (float) sprPlayer.getPlayerY()));
+        if (arChunks[arChunks[arChunks.length / 2].length / 2][arChunks.length / 2].vTopLeft.x != vPlayerChunk.x || arChunks[arChunks[arChunks.length / 2].length / 2][arChunks.length / 2].vTopLeft.y != vPlayerChunk.y) {
+            int nPlayerChunkX = (int) vPlayerChunk.x;
+            int nPlayerChunkY = (int) vPlayerChunk.y;
+            for (int y = 0; y < arChunks.length; y++)
+                for (int x = 0; x < arChunks[y].length; x++)
+                    arChunks[y][x] = new Chunk(nPlayerChunkX - Chunk.CHUNK_SIZE * (x - ((arChunks[y].length - 1) / 2)), nPlayerChunkY - Chunk.CHUNK_SIZE * (y - ((arChunks.length - 1) / 2)));
+        }
+        sprPlayer.move(this);
+    }
+
     public void draw(SpriteBatch batch) {
-        updateMap();
         for (Chunk arChunk[] : arChunks) {
             for (Chunk chunk : arChunk) {
                 chunk.draw(batch, sprPlayer);
             }
         }
         sprPlayer.draw(batch);
-    }
-
-    public void updateMap() {
-        Vector2 vPlayerChunk = getChunkIndices(new Vector2((float) sprPlayer.getPlayerX(), (float) sprPlayer.getPlayerY()));
-        if (arChunks[arChunks[arChunks.length / 2].length / 2][arChunks.length / 2].vTopLeft.x == vPlayerChunk.x && arChunks[arChunks[arChunks.length / 2].length / 2][arChunks.length / 2].vTopLeft.y == vPlayerChunk.y) {
-            return;
-        }
-        int nPlayerChunkX = (int) vPlayerChunk.x;
-        int nPlayerChunkY = (int) vPlayerChunk.y;
-        for (int y = 0; y < arChunks.length; y++)
-            for (int x = 0; x < arChunks[y].length; x++)
-                arChunks[y][x] = new Chunk(nPlayerChunkX - Chunk.CHUNK_SIZE * (x - ((arChunks[y].length - 1) / 2)), nPlayerChunkY - Chunk.CHUNK_SIZE * (y - ((arChunks.length - 1) / 2)));
-
     }
 
     public Vector2 getChunkIndices(Vector2 vPos) {

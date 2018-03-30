@@ -20,7 +20,7 @@ public class CollisionDetectionScratch extends PApplet {
         arObjects = new boolean[nHeight][nWidth];
         for (int y = 0; y < nHeight; y++) {
             for (int x = 0; x < nWidth; x++) {
-                arObjects[y][x] = (random(10) > 8);
+                arObjects[y][x] = (random(10) > 9);
             }
         }
         player = new Player(nWidth, nHeight);
@@ -82,25 +82,27 @@ public class CollisionDetectionScratch extends PApplet {
         }
 
 
+        //TODO: improve this code
         boolean canMove(Direction direction) {
             try {
                 double dNewX = dX, dNewY = dY;
                 if (direction == Direction.NORTH || direction == Direction.SOUTH) {
-                    dNewY += arnKeys[0] * dSpeed;
+                    dNewY += arnKeys[0] * dSpeed / 2;
                 } else if (direction == Direction.EAST || direction == Direction.WEST) {
-                    dNewX += arnKeys[1] * dSpeed;
+                    dNewX += arnKeys[1] * dSpeed / 2;
                 }
                 int nTileX, nTileY;
                 nTileX = (int) dNewX;
                 nTileY = (int) dNewY;
+                System.out.println(dNewX + "\t" + dNewY);
                 if (arObjects[nTileY][nTileX]) return false;
-                if (dNewX % 1 != 0) {
+                if (dNewX % 1 > dSpeed / 2) {
                     try {
                         if (arObjects[nTileY][nTileX + 1]) return false;
                     } catch (Exception e) {
                         return false;
                     }
-                    if (dNewY % 1 != 0) {
+                    if (dNewY % 1 > dSpeed / 2) {
                         try {
                             if (arObjects[nTileY + 1][nTileX]) return false;
                         } catch (Exception e) {
@@ -112,17 +114,16 @@ public class CollisionDetectionScratch extends PApplet {
                             return false;
                         }
                     }
-                } else if (dNewY % 1 != 0) {
+                } else if (dNewY % 1 > dSpeed / 2) {
                     try {
                         if (arObjects[nTileY + 1][nTileX]) return false;
                     } catch (Exception e) {
                         return false;
                     }
                 }
-                return true;
             } catch (Exception e) {
-                return true;
             }
+            return true;
         }
     }
 
