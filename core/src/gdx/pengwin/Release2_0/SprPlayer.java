@@ -4,9 +4,12 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+
 
 public class SprPlayer extends Sprite {
     private double dX, dY;
@@ -24,7 +27,7 @@ public class SprPlayer extends Sprite {
         this.arnKeys = Arrays.copyOf(ScrGame.arnKeys, ScrGame.arnKeys.length);
     }
 
-    public void draw(SpriteBatch batch) {
+    public void draw(SpriteBatch batch, ShapeRenderer sr) {
         //System.out.println(this.dX + "\t" + this.dY); //Use this to track player movements
         int nMiddleX = SprTile.TILE_SIZE * 8;
         int nMiddleY = SprTile.TILE_SIZE * 8;
@@ -44,55 +47,76 @@ public class SprPlayer extends Sprite {
         }
     }
 
-    //TODO: I don't like this code, but it works. I might try to improve it later.
+    //TODO: I don't like this code, but it works (actually it doesn't yet). I might try to improve it later.
+    //This needs to check if the characters bounding rectangle lies on multiple chunks
+
     boolean canMove(Direction direction, Map map) {
-        SprNPO[][] arsprNPO = map.arChunks[map.arChunks.length / 2][map.arChunks.length / 2].arsprNPO;
-        try {
-            double dNewX = dX, dNewY = dY;
-            if (direction == Direction.NORTH || direction == Direction.SOUTH) {
-                dNewY += nVertMovement * dSpeed / 2;
-            } else if (direction == Direction.EAST || direction == Direction.WEST) {
-                dNewX += nHoriMovement * dSpeed / 2;
-            }
-            Vector2 vTopLeft = map.getChunkIndices(new Vector2((float) dNewX, (float) dNewY));
-            for (Chunk[] arChunk : map.arChunks) {
-                for (Chunk chunk : arChunk) {
-                    if (chunk.vTopLeft == vTopLeft) {
-                        arsprNPO = chunk.arsprNPO;
-                        break;
-                    }
+        double dNewX = dX, dNewY = dY;
+        if (direction == Direction.NORTH || direction == Direction.SOUTH) {
+            dNewY += nVertMovement * dSpeed / 2;
+        } else if (direction == Direction.EAST || direction == Direction.WEST) {
+            dNewX += nHoriMovement * dSpeed / 2;
+        }
+        Vector2 vTopLeft = map.getChunkIndices(new Vector2((float) dNewX, (float) dNewY)); //Sprite draws at bottom left?
+        Vector2 vTopRight = map.getChunkIndices(new Vector2((float) dNewX + 1, (float) dNewY));
+        Vector2 vBottomLeft = map.getChunkIndices(new Vector2((float) dNewX, (float) dNewY + 1));
+        Vector2 vBottomRight = map.getChunkIndices(new Vector2((float) dNewX + 1, (float) dNewY + 1));
+        ArrayList<Location> alCornerLocs = new ArrayList<>();
+
+        System.out.println(vTopLeft + "\t" + vTopRight);
+        System.out.println(vBottomLeft + "\t" + vBottomRight);
+        System.out.println();
+        alCornerLocs.add(new Location((float) dNewX - vTopLeft.x, (float) dNewY - vTopLeft.y, new Chunk((int) vTopLeft.x, (int) vTopLeft.y)));
+        alCornerLocs.add(new Location((float) dNewX + 1 - vTopRight.x, (float) dNewY - vTopRight.y, new Chunk((int) vTopRight.x, (int) vTopRight.y)));
+        alCornerLocs.add(new Location((float) dNewX - vBottomLeft.x, (float) dNewY + 1 - vBottomLeft.y, new Chunk((int) vBottomLeft.x, (int) vBottomLeft.y)));
+        alCornerLocs.add(new Location((float) dNewX + 1 - vBottomRight.x, (float) dNewY + 1 - vBottomRight.y, new Chunk((int) vBottomRight.x, (int) vBottomRight.y)));
+
+        /*for (Chunk[] arChunk : map.arChunks) {
+            for (Chunk chunk : arChunk) {
+                if (chunk.vTopLeft.equals(vTopLeft)) {
+                    alCornerLocs.add(new Location((float)dNewX - chunk.vTopLeft.x, (float)dNewY - chunk.vTopLeft.y, chunk));
+                }
+                if (chunk.vTopLeft.equals(vTopRight)) {
+                    alCornerLocs.add(new Location((float)dNewX - chunk.vTopLeft.x, (float)dNewY - chunk.vTopLeft.y, chunk));
+                }
+                if (chunk.vTopLeft.equals(vBottomLeft)) {
+                    alCornerLocs.add(new Location((float)dNewX - chunk.vTopLeft.x, (float)dNewY - chunk.vTopLeft.y, chunk));
+                }
+                if (chunk.vTopLeft.equals(vBottomRight)) {
+                    alCornerLocs.add(new Location((float)dNewX - chunk.vTopLeft.x, (float)dNewY - chunk.vTopLeft.y, chunk));
                 }
             }
-            int nTileX, nTileY;
-            nTileX = (int) dNewX;
-            nTileY = (int) dNewY;
-            if (arsprNPO[nTileY][nTileX] != null) return false;
-            if (dNewX % 1 > dSpeed / 2) {
+        }*/
+
+        if (alCornerLocs.get(0).chunk.arsprNPO[alCornerLocs.get(0).nY][alCornerLocs.get(0).nX] != null) return false;
+        if (dNewX % 1 > dSpeed / 2) {
+            try {
+                if (alCornerLocs.get(1).chunk.arsprNPO[alCornerLocs.get(1).nY][alCornerLocs.get(1).nX] != null)
+                    return false;
+            } catch (Exception e) {
+                return false;
+            }
+            if (dNewY % 1 > dSpeed / 2) {
                 try {
-                    if (arsprNPO[nTileY][nTileX + 1] != null) return false;
+                    if (alCornerLocs.get(2).chunk.arsprNPO[alCornerLocs.get(2).nY][alCornerLocs.get(2).nX] != null)
+                        return false;
                 } catch (Exception e) {
                     return false;
                 }
-                if (dNewY % 1 > dSpeed / 2) {
-                    try {
-                        if (arsprNPO[nTileY + 1][nTileX] != null) return false;
-                    } catch (Exception e) {
-                        return false;
-                    }
-                    try {
-                        if (arsprNPO[nTileY + 1][nTileX + 1] != null) return false;
-                    } catch (Exception e) {
-                        return false;
-                    }
-                }
-            } else if (dNewY % 1 > dSpeed / 2) {
                 try {
-                    if (arsprNPO[nTileY + 1][nTileX] != null) return false;
+                    if (alCornerLocs.get(3).chunk.arsprNPO[alCornerLocs.get(3).nY][alCornerLocs.get(3).nX] != null)
+                        return false;
                 } catch (Exception e) {
                     return false;
                 }
             }
-        } catch (Exception e) {
+        } else if (dNewY % 1 > dSpeed / 2) {
+            try {
+                if (alCornerLocs.get(1).chunk.arsprNPO[alCornerLocs.get(1).nY][alCornerLocs.get(1).nX] != null)
+                    return false;
+            } catch (Exception e) {
+                return false;
+            }
         }
         return true;
     }
@@ -111,6 +135,20 @@ public class SprPlayer extends Sprite {
 
     public void setY(double dY) {
         this.dY = dY;
+    }
+
+    class Location {
+        float fX, fY;
+        int nX, nY;
+        Chunk chunk;
+
+        public Location(float fX, float fY, Chunk chunk) {
+            this.fX = fX;
+            this.fY = fY;
+            this.nX = (int) fX;
+            this.nY = (int) fY;
+            this.chunk = chunk;
+        }
     }
 
     enum Direction {

@@ -7,6 +7,7 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -15,6 +16,7 @@ public abstract class GameScreen implements Screen, InputProcessor {
     public SpriteBatch batch;
     GamMain gamMain;
     OrthographicCamera oc;
+    ShapeRenderer sr;
     ScreenType screenType;
     Texture txButtonUp, txButtonDown;
     ArrayList<SprButton> alsprButtons = new ArrayList<SprButton>();
@@ -23,10 +25,10 @@ public abstract class GameScreen implements Screen, InputProcessor {
     @Override
     public void show() {
         oc = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-        oc = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         oc.setToOrtho(true, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         oc.update();
         batch = new SpriteBatch();
+        sr = new ShapeRenderer();
         alsprButtons.clear();
         alsprButtons.addAll(Arrays.asList(
                 new SprButton(SprButton.BUTTON_WIDTH, SprButton.BUTTON_HEIGHT, 0, Gdx.graphics.getHeight() - SprButton.BUTTON_HEIGHT, ScrMenu.txButtonUp, ScrMenu.screenType),
@@ -39,10 +41,13 @@ public abstract class GameScreen implements Screen, InputProcessor {
     public void render(float delta) {
         batch.begin();
         batch.setProjectionMatrix(oc.combined);
+        sr.begin(ShapeRenderer.ShapeType.Line);
+        sr.setProjectionMatrix(oc.combined);
         for (SprButton sprButton : alsprButtons)
             if (sprButton.screenType != screenType)
                 sprButton.draw(batch);
         batch.end();
+        sr.end();
     }
 
 

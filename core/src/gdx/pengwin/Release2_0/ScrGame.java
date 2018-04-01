@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 
 public class ScrGame extends GameScreen {
     protected static ScreenType screenType = ScreenType.Game;
@@ -33,14 +34,17 @@ public class ScrGame extends GameScreen {
         Gdx.gl.glClearColor(0, 1, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         batch.begin();
+        sr.begin(ShapeRenderer.ShapeType.Line);
         batch.setProjectionMatrix(oc.combined);
+        sr.setProjectionMatrix(oc.combined);
         map.update();
-        map.draw(batch);
+        map.draw(batch, sr);
         if (showButtons)
             for (SprButton sprButton : alsprButtons)
                 if (sprButton.screenType != screenType)
                     sprButton.draw(batch);
         batch.end();
+        sr.end();
     }
 
     @Override

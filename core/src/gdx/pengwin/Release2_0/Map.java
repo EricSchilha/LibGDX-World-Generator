@@ -1,6 +1,7 @@
 package gdx.pengwin.Release2_0;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
 
 public class Map {
@@ -32,13 +33,13 @@ public class Map {
         sprPlayer.move(this);
     }
 
-    public void draw(SpriteBatch batch) {
+    public void draw(SpriteBatch batch, ShapeRenderer sr) {
         for (Chunk arChunk[] : arChunks) {
             for (Chunk chunk : arChunk) {
                 chunk.draw(batch, sprPlayer);
             }
         }
-        sprPlayer.draw(batch);
+        sprPlayer.draw(batch, sr);
     }
 
     public Vector2 getChunkIndices(Vector2 vPos) {
