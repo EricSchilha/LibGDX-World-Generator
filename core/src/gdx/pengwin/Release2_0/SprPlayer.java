@@ -10,7 +10,6 @@ import com.badlogic.gdx.math.Vector2;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-
 public class SprPlayer extends Sprite {
     private double dX, dY;
     private int nMinDivisor = 4096;
@@ -40,10 +39,10 @@ public class SprPlayer extends Sprite {
         nVertMovement = arnKeys[1] - arnKeys[0];
         nHoriMovement = arnKeys[3] - arnKeys[2];
         if ((nVertMovement == -1 && canMove(Direction.NORTH, map)) || (nVertMovement == 1 && canMove(Direction.SOUTH, map))) {
-            setY(dY + nVertMovement * dSpeed);
+            setY(dY + (nVertMovement * dSpeed));
         }
         if ((nHoriMovement == -1 && canMove(Direction.EAST, map)) || (nHoriMovement == 1 && canMove(Direction.WEST, map))) {
-            setX(dX + nHoriMovement * dSpeed);
+            setX(dX + (nHoriMovement * dSpeed));
         }
     }
 
@@ -57,67 +56,12 @@ public class SprPlayer extends Sprite {
         } else if (direction == Direction.EAST || direction == Direction.WEST) {
             dNewX += nHoriMovement * dSpeed / 2;
         }
-        Vector2 vTopLeft = map.getChunkIndices(new Vector2((float) dNewX, (float) dNewY)); //Sprite draws at bottom left?
+        Vector2 vTopLeft = map.getChunkIndices(new Vector2((float) dNewX, (float) dNewY)); //These store the chunk top left corner
         Vector2 vTopRight = map.getChunkIndices(new Vector2((float) dNewX + 1, (float) dNewY));
-        Vector2 vBottomLeft = map.getChunkIndices(new Vector2((float) dNewX, (float) dNewY + 1));
+        Vector2 vBottomLeft = map.getChunkIndices(new Vector2((float) dNewX, (float) dNewY));
         Vector2 vBottomRight = map.getChunkIndices(new Vector2((float) dNewX + 1, (float) dNewY + 1));
-        ArrayList<Location> alCornerLocs = new ArrayList<>();
 
-        System.out.println(vTopLeft + "\t" + vTopRight);
-        System.out.println(vBottomLeft + "\t" + vBottomRight);
-        System.out.println();
-        alCornerLocs.add(new Location((float) dNewX - vTopLeft.x, (float) dNewY - vTopLeft.y, new Chunk((int) vTopLeft.x, (int) vTopLeft.y)));
-        alCornerLocs.add(new Location((float) dNewX + 1 - vTopRight.x, (float) dNewY - vTopRight.y, new Chunk((int) vTopRight.x, (int) vTopRight.y)));
-        alCornerLocs.add(new Location((float) dNewX - vBottomLeft.x, (float) dNewY + 1 - vBottomLeft.y, new Chunk((int) vBottomLeft.x, (int) vBottomLeft.y)));
-        alCornerLocs.add(new Location((float) dNewX + 1 - vBottomRight.x, (float) dNewY + 1 - vBottomRight.y, new Chunk((int) vBottomRight.x, (int) vBottomRight.y)));
 
-        /*for (Chunk[] arChunk : map.arChunks) {
-            for (Chunk chunk : arChunk) {
-                if (chunk.vTopLeft.equals(vTopLeft)) {
-                    alCornerLocs.add(new Location((float)dNewX - chunk.vTopLeft.x, (float)dNewY - chunk.vTopLeft.y, chunk));
-                }
-                if (chunk.vTopLeft.equals(vTopRight)) {
-                    alCornerLocs.add(new Location((float)dNewX - chunk.vTopLeft.x, (float)dNewY - chunk.vTopLeft.y, chunk));
-                }
-                if (chunk.vTopLeft.equals(vBottomLeft)) {
-                    alCornerLocs.add(new Location((float)dNewX - chunk.vTopLeft.x, (float)dNewY - chunk.vTopLeft.y, chunk));
-                }
-                if (chunk.vTopLeft.equals(vBottomRight)) {
-                    alCornerLocs.add(new Location((float)dNewX - chunk.vTopLeft.x, (float)dNewY - chunk.vTopLeft.y, chunk));
-                }
-            }
-        }*/
-
-        if (alCornerLocs.get(0).chunk.arsprNPO[alCornerLocs.get(0).nY][alCornerLocs.get(0).nX] != null) return false;
-        if (dNewX % 1 > dSpeed / 2) {
-            try {
-                if (alCornerLocs.get(1).chunk.arsprNPO[alCornerLocs.get(1).nY][alCornerLocs.get(1).nX] != null)
-                    return false;
-            } catch (Exception e) {
-                return false;
-            }
-            if (dNewY % 1 > dSpeed / 2) {
-                try {
-                    if (alCornerLocs.get(2).chunk.arsprNPO[alCornerLocs.get(2).nY][alCornerLocs.get(2).nX] != null)
-                        return false;
-                } catch (Exception e) {
-                    return false;
-                }
-                try {
-                    if (alCornerLocs.get(3).chunk.arsprNPO[alCornerLocs.get(3).nY][alCornerLocs.get(3).nX] != null)
-                        return false;
-                } catch (Exception e) {
-                    return false;
-                }
-            }
-        } else if (dNewY % 1 > dSpeed / 2) {
-            try {
-                if (alCornerLocs.get(1).chunk.arsprNPO[alCornerLocs.get(1).nY][alCornerLocs.get(1).nX] != null)
-                    return false;
-            } catch (Exception e) {
-                return false;
-            }
-        }
         return true;
     }
 
@@ -135,20 +79,6 @@ public class SprPlayer extends Sprite {
 
     public void setY(double dY) {
         this.dY = dY;
-    }
-
-    class Location {
-        float fX, fY;
-        int nX, nY;
-        Chunk chunk;
-
-        public Location(float fX, float fY, Chunk chunk) {
-            this.fX = fX;
-            this.fY = fY;
-            this.nX = (int) fX;
-            this.nY = (int) fY;
-            this.chunk = chunk;
-        }
     }
 
     enum Direction {
