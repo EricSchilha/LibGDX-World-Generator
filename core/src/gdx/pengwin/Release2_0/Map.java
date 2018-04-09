@@ -5,7 +5,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
 
 public class Map {
-    public Chunk[][] arChunks = new Chunk[5][5];
+    public Chunk[][] arChunks = new Chunk[1][1];
     public int nSeed;
     public SprPlayer sprPlayer = new SprPlayer();
 
@@ -22,7 +22,7 @@ public class Map {
 
 
     public void update() {
-        Vector2 vPlayerChunk = getChunkIndices(new Vector2((float) sprPlayer.getPlayerX(), (float) sprPlayer.getPlayerY()));
+        Vector2 vPlayerChunk = getChunkIndices(sprPlayer.getLocation());
         if (arChunks[arChunks[arChunks.length / 2].length / 2][arChunks.length / 2].vTopLeft.x != vPlayerChunk.x || arChunks[arChunks[arChunks.length / 2].length / 2][arChunks.length / 2].vTopLeft.y != vPlayerChunk.y) {
             int nPlayerChunkX = (int) vPlayerChunk.x;
             int nPlayerChunkY = (int) vPlayerChunk.y;
