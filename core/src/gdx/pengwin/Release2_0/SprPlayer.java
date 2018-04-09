@@ -5,15 +5,17 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
+import gdx.pengwin.Release1_0.Tile;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 
 public class SprPlayer extends Sprite {
     private double dX, dY;
+    private int nPixelX = SprTile.TILE_SIZE * 8, nPixelY = SprTile.TILE_SIZE * 8 + SprTile.TILE_SIZE;
     private int nMinDivisor = 4096;
-    private double dSpeed = 0.1;
+    private double dSpeed = 1;
     public static Texture txPlayer = new Texture(Gdx.files.internal("Dude1.png"));
     int[] arnKeys;
     int nVertMovement = 0, nHoriMovement = 0;
@@ -28,9 +30,7 @@ public class SprPlayer extends Sprite {
 
     public void draw(SpriteBatch batch, ShapeRenderer sr) {
         //System.out.println(this.dX + "\t" + this.dY); //Use this to track player movements
-        int nMiddleX = SprTile.TILE_SIZE * 8;
-        int nMiddleY = SprTile.TILE_SIZE * 8;
-        setPosition(nMiddleX, nMiddleY + SprTile.TILE_SIZE);
+        setPosition(nPixelX, nPixelY);
         super.draw(batch);
     }
 
@@ -56,12 +56,21 @@ public class SprPlayer extends Sprite {
         } else if (direction == Direction.EAST || direction == Direction.WEST) {
             dNewX += nHoriMovement * dSpeed / 2;
         }
-        Vector2 vTopLeft = map.getChunkIndices(new Vector2((float) dNewX, (float) dNewY)); //These store the chunk top left corner
-        Vector2 vTopRight = map.getChunkIndices(new Vector2((float) dNewX + 1, (float) dNewY));
+        Vector2 vTopLeft = map.getChunkIndices(new Vector2((float) dNewX, (float) dNewY - 1)); //These store the chunk top left corner
+        Vector2 vTopRight = map.getChunkIndices(new Vector2((float) dNewX + 1, (float) dNewY - 1));
         Vector2 vBottomLeft = map.getChunkIndices(new Vector2((float) dNewX, (float) dNewY));
-        Vector2 vBottomRight = map.getChunkIndices(new Vector2((float) dNewX + 1, (float) dNewY + 1));
-
-
+        Vector2 vBottomRight = map.getChunkIndices(new Vector2((float) dNewX + 1, (float) dNewY));
+        SprNPO[][] arsprNPOTL = new Chunk((int) vTopLeft.x, (int) vTopLeft.y).arsprNPO;//new SprNPO[Chunk.CHUNK_SIZE][Chunk.CHUNK_SIZE];
+        SprNPO[][] arsprNPOTR = new Chunk((int) vTopRight.x, (int) vTopRight.y).arsprNPO;//new SprNPO[Chunk.CHUNK_SIZE][Chunk.CHUNK_SIZE];
+        SprNPO[][] arsprNPOBL = new Chunk((int) vBottomLeft.x, (int) vBottomLeft.y).arsprNPO;//new SprNPO[Chunk.CHUNK_SIZE][Chunk.CHUNK_SIZE];
+        SprNPO[][] arsprNPOBR = new Chunk((int) vBottomRight.x, (int) vBottomRight.y).arsprNPO;//new SprNPO[Chunk.CHUNK_SIZE][Chunk.CHUNK_SIZE];
+        Rectangle rectPlayer = new Rectangle(nPixelX, nPixelY, Tile.TILE_SIZE, Tile.TILE_SIZE);
+        for (int y = 0; y < arsprNPOTL.length; y++) {
+            for (int x = 0; x < arsprNPOTL[0].length; x++) {
+                if (arsprNPOTL[y][x] == null) continue;
+                if (arsprNPOTL[y][x].getBoundingRectangle().overlaps(rectPlayer)) return false;
+            }
+        }
         return true;
     }
 

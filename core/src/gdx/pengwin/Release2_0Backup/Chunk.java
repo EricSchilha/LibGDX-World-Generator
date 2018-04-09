@@ -1,4 +1,4 @@
-package gdx.pengwin.Release2_0;
+package gdx.pengwin.Release2_0Backup;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -29,22 +29,20 @@ public class Chunk {
         float fPersistence = (float) 0.05;
         for (int y = 0; y < arsprTiles.length; y++) {
             for (int x = 0; x < arsprTiles[y].length; x++) {
-                arsprTiles[y][x] = new SprTile(TileType.Grass);
-//                double dNoiseVal = noise.noise(vTopLeft.x * fPersistence + fWidthOffset, vTopLeft.y * fPersistence + fHeightOffset);
-//                fWidthOffset += fPersistence;
-//                arsprTiles[y][x] = (dNoiseVal < 0.35) ? new SprTile(TileType.Water) : (dNoiseVal < 0.65 ? new SprTile(TileType.Grass) : new SprTile(TileType.Mountain));
+                double dNoiseVal = noise.noise(vTopLeft.x * fPersistence + fWidthOffset, vTopLeft.y * fPersistence + fHeightOffset);
+                fWidthOffset += fPersistence;
+                arsprTiles[y][x] = (dNoiseVal < 0.35) ? new SprTile(TileType.Water) : (dNoiseVal < 0.65 ? new SprTile(TileType.Grass) : new SprTile(TileType.Mountain));
                 if (x % 2 == 0 && y % 2 == 0) {
-                    arsprNPO[y][x] = new SprNPO(NPOType.Tree);
-//                    if (arsprTiles[y][x].tileType == TileType.Grass) {
-//                        try {
-//                            int nTreeX = randNPO.nextInt(3) - 1;
-//                            int nTreeY = randNPO.nextInt(3) - 1;
-//                            if (arsprTiles[y + nTreeY][x + nTreeX].tileType == TileType.Grass) {
-//                                arsprNPO[y + nTreeY][x + nTreeX] = new SprNPO(NPOType.Tree);
-//                            }
-//                        } catch (Exception e) {
-//                        }
-//                    }
+                    if (arsprTiles[y][x].tileType == TileType.Grass) {
+                        try {
+                            int nTreeX = randNPO.nextInt(3) - 1;
+                            int nTreeY = randNPO.nextInt(3) - 1;
+                            if (arsprTiles[y + nTreeY][x + nTreeX].tileType == TileType.Grass) {
+                                arsprNPO[y + nTreeY][x + nTreeX] = new SprNPO(NPOType.Tree);
+                            }
+                        } catch (Exception e) {
+                        }
+                    }
                 }
             }
             fWidthOffset = 0;
