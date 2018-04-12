@@ -5,7 +5,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
 
 public class Map {
-    public Chunk[][] arChunks = new Chunk[1][1];
+    public Chunk[][] arChunks = new Chunk[3][3];
     public int nSeed;
     public SprPlayer sprPlayer = new SprPlayer();
 
