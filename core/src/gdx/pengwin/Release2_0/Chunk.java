@@ -15,11 +15,11 @@ public class Chunk {
     public static Noise noise = new Noise();
     Vector2 vTopLeft;
 
-    public Chunk(int nX, int nY) {
+    public Chunk(Vector2 vTopLeft) {
         this.arsprTiles = new SprTile[CHUNK_SIZE][CHUNK_SIZE];
         this.arsprNPO = new SprNPO[CHUNK_SIZE][CHUNK_SIZE];
-        vTopLeft = new Vector2(nX, nY);
-        randNPO = new Random((int) noise.noise(nX, nY) * 10000);
+        this.vTopLeft = vTopLeft;
+        randNPO = new Random((int) noise.noise((int)this.vTopLeft.x, (int)this.vTopLeft.y) * 10000);
         generateMap();
     }
 

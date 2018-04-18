@@ -7,7 +7,10 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Vector;
+
 
 public class SprPlayer extends Sprite {
     private Vector2 vLocation;
@@ -48,43 +51,21 @@ public class SprPlayer extends Sprite {
     //This needs to check if the characters bounding rectangle lies on multiple chunks
 
     boolean canMove(Direction direction, Map map) {
-        Vector2 vNewLocation = new Vector2(vLocation.x + (float)0.5, vLocation.y + (float)0.5);
+        Vector2 vNewLocation = new Vector2(vLocation);
         if (direction == Direction.NORTH || direction == Direction.SOUTH) {
-            vNewLocation.x += nVertMovement * fSpeed / 2;
+            vNewLocation.x += nVertMovement * fSpeed;
         } else if (direction == Direction.EAST || direction == Direction.WEST) {
-            vNewLocation.y += nHoriMovement * fSpeed / 2;
+            vNewLocation.y += nHoriMovement * fSpeed;
         }
-        Chunk thisChunk = new Chunk((int)map.getChunkIndices(vNewLocation).x, (int)map.getChunkIndices(vNewLocation).y);
-        for(Chunk[] row : map.arChunks) {
-            for(Chunk chunk : row) {
-                if (chunk.vTopLeft.x == map.getChunkIndices(vNewLocation).x && chunk.vTopLeft.y == map.getChunkIndices(vNewLocation).y) {
-                    thisChunk = chunk;
-                    break;
-                }
-            }
-        }
-        SprNPO[][] arsprNPOTL = thisChunk.arsprNPO;
-        int nTileX = (int)(vNewLocation.x - thisChunk.vTopLeft.x);
-        int nTileY = (int)(vNewLocation.y - thisChunk.vTopLeft.y);
+        ArrayList<Vector2> alCorners = new ArrayList<Vector2>();
+        alCorners.add(vNewLocation);
+        alCorners.add(new Vector2(vNewLocation.x + 1, vNewLocation.y));
+        alCorners.add(new Vector2(vNewLocation.x, vNewLocation.y + 1));
+        alCorners.add(new Vector2(vNewLocation.x + 1, vNewLocation.y + 1));
+        ArrayList<Chunk> alChunks = map.addChunks(alCorners);
+        //for(Chunk chunk : alChunks) {
 
-        for (int y = 0; y < arsprNPOTL.length; y++) {
-            for (int x = 0; x < arsprNPOTL[0].length; x++) {
-                if (y == nTileY && x == nTileX) System.out.print("*");
-                if (arsprNPOTL[y][x] != null) System.out.print("T ");
-                else System.out.print("N ");
-            }
-            System.out.println();
-        }
-        System.out.println();
-
-        if(thisChunk.arsprNPO[(int)(vNewLocation.x - thisChunk.vTopLeft.x)][(int)(vNewLocation.y - thisChunk.vTopLeft.y)] != null) {
-            if (direction == Direction.NORTH || direction == Direction.SOUTH) {
-                setLocation(new Vector2(vLocation.x, vLocation.y + (nVertMovement * -1 * fSpeed)));
-            } else if (direction == Direction.EAST || direction == Direction.WEST) {
-                setLocation(new Vector2(vLocation.x + (nHoriMovement * -1 * fSpeed), vLocation.y));
-            }
-            return false;
-        }
+        //}
         return true;
     }
 
