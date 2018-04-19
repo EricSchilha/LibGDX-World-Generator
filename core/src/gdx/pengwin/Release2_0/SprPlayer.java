@@ -57,15 +57,27 @@ public class SprPlayer extends Sprite {
         } else if (direction == Direction.EAST || direction == Direction.WEST) {
             vNewLocation.y += nHoriMovement * fSpeed;
         }
-        ArrayList<Vector2> alCorners = new ArrayList<Vector2>();
-        alCorners.add(vNewLocation);
-        alCorners.add(new Vector2(vNewLocation.x + 1, vNewLocation.y));
-        alCorners.add(new Vector2(vNewLocation.x, vNewLocation.y + 1));
-        alCorners.add(new Vector2(vNewLocation.x + 1, vNewLocation.y + 1));
-        ArrayList<Chunk> alChunks = map.addChunks(alCorners);
-        //for(Chunk chunk : alChunks) {
+        ArrayList<Vector2> alvCorners = new ArrayList<Vector2>();
+        alvCorners.add(vNewLocation);
+        alvCorners.add(new Vector2(vNewLocation.x + (float)1, vNewLocation.y));
+        alvCorners.add(new Vector2(vNewLocation.x, vNewLocation.y + (float)1));
+        alvCorners.add(new Vector2(vNewLocation.x + (float)1, vNewLocation.y + (float)1));
+        ArrayList<Chunk> alChunks = map.addChunks(alvCorners);
+        for(Chunk chunk : alChunks) {
+            for(int i = 0; i < alvCorners.size(); i++) {
+                try {
+                    int nTileX = (int) (alvCorners.get(i).x - chunk.vTopLeft.x);
+                    int nTileY = (int) (alvCorners.get(i).y - chunk.vTopLeft.y);
+                    System.out.println(alvCorners.get(i));
+                    if (chunk.arsprNPO[nTileY][nTileX] != null) {
+                        System.out.println("OUCH");
+                        return false;
+                    }
+                } catch (Exception e) {
 
-        //}
+                }
+            }
+        }
         return true;
     }
 

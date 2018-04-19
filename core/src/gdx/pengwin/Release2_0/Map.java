@@ -32,7 +32,7 @@ public class Map {
                 for (int x = 0; x < arChunks[y].length; x++)
                     arChunks[y][x] = addChunk(new Vector2(nPlayerChunkX - Chunk.CHUNK_SIZE * (x - ((arChunks[y].length - 1) / 2)), nPlayerChunkY - Chunk.CHUNK_SIZE * (y - ((arChunks.length - 1) / 2))));
         }
-        sprPlayer.move(this );
+        sprPlayer.move(this);
     }
 
     public void draw(SpriteBatch batch, ShapeRenderer sr) {
@@ -44,19 +44,28 @@ public class Map {
         sprPlayer.draw(batch, sr);
     }
 
-    public Chunk addChunk (Vector2 vTopLeft) {
+    public Chunk addChunk(Vector2 vTopLeft) {
         for (Chunk arChunk[] : arChunks) {
-            for(Chunk chunk : arChunk) {
-                if(chunk != null)
-                    if(chunk.vTopLeft.x == vTopLeft.x && chunk.vTopLeft.y == vTopLeft.y)
+            for (Chunk chunk : arChunk) {
+                if (chunk != null)
+                    if (chunk.vTopLeft.x == vTopLeft.x && chunk.vTopLeft.y == vTopLeft.y)
                         return chunk;
             }
         }
         return new Chunk(vTopLeft);
     }
 
-    public ArrayList<Chunk> addChunks (ArrayList<Vector2> vTopLefts) {
-        return null;
+    public ArrayList<Chunk> addChunks(ArrayList<Vector2> alvTopLefts) {
+        ArrayList<Chunk> alChunks = new ArrayList<Chunk>();
+
+        VectorLoop:
+        for (Vector2 vTopLeft : alvTopLefts) {
+            for (Chunk chunk : alChunks) {
+                if (chunk.vTopLeft.x == vTopLeft.x && chunk.vTopLeft.y == vTopLeft.y) continue VectorLoop;
+            }
+            alChunks.add(addChunk(vTopLeft));
+        }
+        return alChunks;
     }
 
     public Vector2 getChunkIndices(Vector2 vPos) {
