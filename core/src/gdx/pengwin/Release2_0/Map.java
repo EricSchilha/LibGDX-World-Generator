@@ -7,7 +7,7 @@ import com.badlogic.gdx.math.Vector2;
 import java.util.ArrayList;
 
 public class Map {
-    public Chunk[][] arChunks = new Chunk[5][5];
+    public Chunk[][] arChunks = new Chunk[3][3];
     public int nSeed;
     public SprPlayer sprPlayer = new SprPlayer();
 
@@ -55,17 +55,15 @@ public class Map {
         return new Chunk(vTopLeft);
     }
 
-    public ArrayList<Chunk> addChunks(ArrayList<Vector2> alvTopLefts) {
-        ArrayList<Chunk> alChunks = new ArrayList<Chunk>();
-
-        VectorLoop:
-        for (Vector2 vTopLeft : alvTopLefts) {
-            for (Chunk chunk : alChunks) {
-                if (chunk.vTopLeft.x == vTopLeft.x && chunk.vTopLeft.y == vTopLeft.y) continue VectorLoop;
+    public void addChunks(ArrayList<Vector2> alvTopLefts, ArrayList<Chunk> alChunks) {
+        alChunks.clear();
+        VectorLoop: for (Vector2 vTopLeft : alvTopLefts) {
+            for (int i = 0; i < alChunks.size(); i++) {
+                vTopLeft = getChunkIndices(vTopLeft);
+                if (alChunks.get(i).vTopLeft.x == vTopLeft.x && alChunks.get(i).vTopLeft.y == vTopLeft.y) continue VectorLoop;
             }
             alChunks.add(addChunk(vTopLeft));
         }
-        return alChunks;
     }
 
     public Vector2 getChunkIndices(Vector2 vPos) {

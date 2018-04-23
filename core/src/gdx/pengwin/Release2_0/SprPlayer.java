@@ -20,6 +20,8 @@ public class SprPlayer extends Sprite {
     public static Texture txPlayer = new Texture(Gdx.files.internal("Dude1.png"));
     int[] arnKeys;
     int nVertMovement = 0, nHoriMovement = 0;
+    ArrayList<Chunk> alChunks = new ArrayList<Chunk>();
+    ArrayList<Vector2> alvCorners = new ArrayList<Vector2>();
 
     public SprPlayer() {
         super(txPlayer);
@@ -57,27 +59,28 @@ public class SprPlayer extends Sprite {
         } else if (direction == Direction.EAST || direction == Direction.WEST) {
             vNewLocation.y += nHoriMovement * fSpeed;
         }
-        ArrayList<Vector2> alvCorners = new ArrayList<Vector2>();
+        alvCorners.clear();
         alvCorners.add(vNewLocation);
         alvCorners.add(new Vector2(vNewLocation.x + (float)1, vNewLocation.y));
         alvCorners.add(new Vector2(vNewLocation.x, vNewLocation.y + (float)1));
         alvCorners.add(new Vector2(vNewLocation.x + (float)1, vNewLocation.y + (float)1));
-        ArrayList<Chunk> alChunks = map.addChunks(alvCorners);
-        for(Chunk chunk : alChunks) {
+
+        map.addChunks(alvCorners, alChunks);
+        /*for(Chunk chunk : alChunks) {
             for(int i = 0; i < alvCorners.size(); i++) {
                 try {
                     int nTileX = (int) (alvCorners.get(i).x - chunk.vTopLeft.x);
                     int nTileY = (int) (alvCorners.get(i).y - chunk.vTopLeft.y);
                     System.out.println(alvCorners.get(i));
                     if (chunk.arsprNPO[nTileY][nTileX] != null) {
-                        System.out.println("OUCH");
+                        System.out.println("TREE HIT");
                         return false;
                     }
                 } catch (Exception e) {
 
                 }
             }
-        }
+        }*/
         return true;
     }
 
