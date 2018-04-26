@@ -55,8 +55,8 @@ public class Map {
         return new Chunk(vTopLeft);
     }
 
-    public void addChunks(ArrayList<Vector2> alvTopLefts, ArrayList<Chunk> alChunks) {
-        alChunks.clear();
+    public ArrayList<Chunk> addChunks(ArrayList<Vector2> alvTopLefts) {
+        ArrayList<Chunk> alChunks = new ArrayList<Chunk>();
         VectorLoop: for (Vector2 vTopLeft : alvTopLefts) {
             for (int i = 0; i < alChunks.size(); i++) {
                 vTopLeft = getChunkIndices(vTopLeft);
@@ -64,6 +64,7 @@ public class Map {
             }
             alChunks.add(addChunk(vTopLeft));
         }
+        return alChunks;
     }
 
     public Vector2 getChunkIndices(Vector2 vPos) {

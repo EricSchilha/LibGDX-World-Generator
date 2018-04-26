@@ -7,29 +7,34 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Vector;
+
+
 
 public class SprPlayer extends Sprite {
-    private double dX, dY;
+    private Vector2 vLocation;
+    private int nPixelX = SprTile.TILE_SIZE * 8, nPixelY = SprTile.TILE_SIZE * 8 + SprTile.TILE_SIZE;
     private int nMinDivisor = 4096;
-    private double dSpeed = 0.1d;
+    private float fSpeed = (float) 0.1;
     public static Texture txPlayer = new Texture(Gdx.files.internal("Dude1.png"));
     int[] arnKeys;
     int nVertMovement = 0, nHoriMovement = 0;
+    ArrayList<Chunk> alChunks = new ArrayList<Chunk>();
+    ArrayList<Vector2> alvCorners = new ArrayList<Vector2>();
 
     public SprPlayer() {
         super(txPlayer);
         setSize(SprTile.TILE_SIZE, -SprTile.TILE_SIZE);
-        this.dX = (int) (Math.random() * Integer.MAX_VALUE / nMinDivisor + Integer.MAX_VALUE / nMinDivisor / 2);
-        this.dY = (int) (Math.random() * Integer.MAX_VALUE / nMinDivisor + Integer.MAX_VALUE / nMinDivisor / 2);
+        this.vLocation = new Vector2(
+                (int) (Math.random() * Integer.MAX_VALUE / nMinDivisor + Integer.MAX_VALUE / nMinDivisor / 2),
+                (int) (Math.random() * Integer.MAX_VALUE / nMinDivisor + Integer.MAX_VALUE / nMinDivisor / 2));
         this.arnKeys = Arrays.copyOf(ScrGame.arnKeys, ScrGame.arnKeys.length);
     }
 
     public void draw(SpriteBatch batch, ShapeRenderer sr) {
-        //System.out.println(this.dX + "\t" + this.dY); //Use this to track player movements
-        int nMiddleX = SprTile.TILE_SIZE * 8;
-        int nMiddleY = SprTile.TILE_SIZE * 8;
-        setPosition(nMiddleX, nMiddleY + SprTile.TILE_SIZE);
+        setPosition(nPixelX, nPixelY);
         super.draw(batch);
     }
 
@@ -37,102 +42,63 @@ public class SprPlayer extends Sprite {
         arnKeys = Arrays.copyOf(ScrGame.arnKeys, ScrGame.arnKeys.length);
         nVertMovement = arnKeys[1] - arnKeys[0];
         nHoriMovement = arnKeys[3] - arnKeys[2];
-        if ((nVertMovement == -1 && canMove(Direction.NORTH, map)) || (nVertMovement == 1 && canMove(Direction.SOUTH, map))) {
-            setY(dY + (nVertMovement * dSpeed));
+        if (nVertMovement == -1 || nVertMovement == 1) {
+            setLocation(new Vector2(vLocation.x, vLocation.y + (nVertMovement * fSpeed)));
         }
-        if ((nHoriMovement == -1 && canMove(Direction.EAST, map)) || (nHoriMovement == 1 && canMove(Direction.WEST, map))) {
-            setX(dX + (nHoriMovement * dSpeed));
+        if (nHoriMovement == -1 || nHoriMovement == 1) {
+            setLocation(new Vector2(vLocation.x + (nHoriMovement * fSpeed), vLocation.y));
         }
     }
 
     //TODO: I don't like this code, but it works (actually it doesn't yet). I might try to improve it later.
     //This needs to check if the characters bounding rectangle lies on multiple chunks
 
-    boolean canMove(Direction direction, Map map) {
-        double dNewX = dX, dNewY = dY;
+    boolean canMove (Direction direction, Map map) {
+        Vector2 vNewLocation = new Vector2(vLocation);
         if (direction == Direction.NORTH || direction == Direction.SOUTH) {
-            dNewY += nVertMovement * dSpeed / 2;
+            vNewLocation.x += nVertMovement * fSpeed;
         } else if (direction == Direction.EAST || direction == Direction.WEST) {
-            dNewX += nHoriMovement * dSpeed / 2;
+            vNewLocation.y += nHoriMovement * fSpeed;
         }
-        Vector2 vTopLeft = map.getChunkIndices(new Vector2((float) dNewX, (float) dNewY + 1)); //These store the chunk top left corner
-        Vector2 vTopRight = map.getChunkIndices(new Vector2((float) dNewX + 1, (float) dNewY + 1));
-        Vector2 vBottomLeft = map.getChunkIndices(new Vector2((float) dNewX, (float) dNewY));
-        Vector2 vBottomRight = map.getChunkIndices(new Vector2((float) dNewX + 1, (float) dNewY));
-//        SprNPO[][] arsprNPOTL = new Chunk((int)vTopLeft.x, (int)vTopLeft.y).arsprNPO;//new SprNPO[Chunk.CHUNK_SIZE][Chunk.CHUNK_SIZE];
-//        SprNPO[][] arsprNPOTR = new Chunk((int)vTopRight.x, (int)vTopRight.y).arsprNPO;//new SprNPO[Chunk.CHUNK_SIZE][Chunk.CHUNK_SIZE];
-//        SprNPO[][] arsprNPOBL = new Chunk((int)vBottomLeft.x, (int)vBottomLeft.y).arsprNPO;//new SprNPO[Chunk.CHUNK_SIZE][Chunk.CHUNK_SIZE];
-//        SprNPO[][] arsprNPOBR = new Chunk((int)vBottomRight.x, (int)vBottomRight.y).arsprNPO;//new SprNPO[Chunk.CHUNK_SIZE][Chunk.CHUNK_SIZE];
-        SprTile[][] arsprNPOTL = new Chunk((int) vTopLeft.x, (int) vTopLeft.y).arsprTiles;//new SprNPO[Chunk.CHUNK_SIZE][Chunk.CHUNK_SIZE];
-        SprTile[][] arsprNPOTR = new Chunk((int) vTopRight.x, (int) vTopRight.y).arsprTiles;//new SprNPO[Chunk.CHUNK_SIZE][Chunk.CHUNK_SIZE];
-        SprTile[][] arsprNPOBL = new Chunk((int) vBottomLeft.x, (int) vBottomLeft.y).arsprTiles;//new SprNPO[Chunk.CHUNK_SIZE][Chunk.CHUNK_SIZE];
-        SprTile[][] arsprNPOBR = new Chunk((int) vBottomRight.x, (int) vBottomRight.y).arsprTiles;//new SprNPO[Chunk.CHUNK_SIZE][Chunk.CHUNK_SIZE];
-        /*for(Chunk[] arChunkRow : map.arChunks) {
-            for(Chunk chunk : arChunkRow) {
-                if(vTopLeft.x == chunk.vTopLeft.x && vTopLeft.y == chunk.vTopLeft.y) { //Directly comparing vectors didn't work right, doing this just to be safe
-                    arsprNPOTL = chunk.arsprNPO.clone(); //clone() should work here
+        alvCorners.clear();
+        alvCorners.add(vNewLocation);
+        alvCorners.add(new Vector2(vNewLocation.x + (float) 1, vNewLocation.y));
+        alvCorners.add(new Vector2(vNewLocation.x, vNewLocation.y + 1));
+        alvCorners.add(new Vector2(vNewLocation.x + (float) 1, vNewLocation.y + 1));
+        alChunks = map.addChunks(alvCorners);
+        /*for (int i = 0; i < alvCorners.size(); i++) {
+            try {
+                Chunk chunk = (i >= alChunks.size()) ? alChunks.get(alChunks.size() - 1) : alChunks.get(i);
+                int nTileX = (int) (alvCorners.get(i).x - chunk.vTopLeft.x);
+                int nTileY = (int) (alvCorners.get(i).y - chunk.vTopLeft.y);
+                if (chunk.arsprNPO[nTileY][nTileX] != null) {
+                    return false;
                 }
-                if(vTopRight.x == chunk.vTopLeft.x && vTopRight.y == chunk.vTopLeft.y) { //Directly comparing vectors didn't work right, doing this just to be safe
-                    arsprNPOTR = chunk.arsprNPO.clone(); //clone() should work here
-                }
-                if(vBottomLeft.x == chunk.vTopLeft.x && vBottomLeft.y == chunk.vTopLeft.y) { //Directly comparing vectors didn't work right, doing this just to be safe
-                    arsprNPOBL = chunk.arsprNPO.clone(); //clone() should work here
-                }
-                if(vBottomRight.x == chunk.vTopLeft.x && vBottomRight.y == chunk.vTopLeft.y) { //Directly comparing vectors didn't work right, doing this just to be safe
-                    arsprNPOBR = chunk.arsprNPO.clone(); //clone() should work here
-                }
+
+            } catch (Exception e) {
+
             }
+//            for (int y = 0; y < chunk.arsprNPO.length; y++) {
+//                for (int x = 0; x < chunk.arsprNPO[0].length; x++) {
+//                    if(nTileX == x && nTileY == y) System.out.print("*");
+//                    if (chunk.arsprNPO[y][x] == null) {
+//                        System.out.print("N ");
+//                    } else if (chunk.arsprNPO[y][x] != null && chunk.arsprNPO[y][x].npoType == NPOType.Tree) {
+//                        System.out.print("T ");
+//                    }
+//                }
+//                System.out.println();
+//            }
         }*/
-        int nTileX, nTileY;
-        nTileX = (int) (dNewX - vTopLeft.x);
-        nTileY = (int) (dNewY - vTopLeft.y);
-        System.out.println(nTileX + "\t" + nTileY);
-        for (int y = 0; y < arsprNPOTL.length; y++) {
-            for (int x = 0; x < arsprNPOTL[0].length; x++) {
-                if (y == nTileY && x == nTileX) System.out.print("*");
-                if (arsprNPOTL[y][x].tileType == TileType.Water) System.out.print("W ");
-                if (arsprNPOTL[y][x].tileType == TileType.Grass) System.out.print("G ");
-                if (arsprNPOTL[y][x].tileType == TileType.Mountain) System.out.print("M ");
-            }
-            System.out.println();
-        }
-        if (arsprNPOTL[nTileY][nTileX].tileType == TileType.Water) return false;
-        nTileX = (int) (dNewX - vTopRight.x);
-        nTileY = (int) (dNewY - vTopRight.y);
-        if (arsprNPOTR[nTileY][nTileX].tileType == TileType.Water) return false;
-        nTileX = (int) (dNewX - vBottomLeft.x);
-        nTileY = (int) (dNewY - vBottomLeft.y);
-        if (arsprNPOBL[nTileY][nTileX].tileType == TileType.Water) return false;
-        nTileX = (int) (dNewX - vBottomRight.x);
-        nTileY = (int) (dNewY - vBottomRight.y);
-        if (arsprNPOBR[nTileY][nTileX].tileType == TileType.Water) return false;
-        /*if(arsprNPOTL[nTileY][nTileX] != null) return false;
-        nTileX = (int)(dNewX - vTopRight.x);
-        nTileY = (int)(dNewY - vTopRight.y);
-        if(arsprNPOTR[nTileY][nTileX] != null) return false;
-        nTileX = (int)(dNewX - vBottomLeft.x);
-        nTileY = (int)(dNewY - vBottomLeft.y);
-        if(arsprNPOBL[nTileY][nTileX] != null) return false;
-        nTileX = (int)(dNewX - vBottomRight.x);
-        nTileY = (int)(dNewY - vBottomRight.y);
-        if(arsprNPOBR[nTileY][nTileX] != null) return false;*/
         return true;
     }
 
-    public double getPlayerX() {
-        return dX;
+    public Vector2 getLocation() {
+        return vLocation;
     }
 
-    public double getPlayerY() {
-        return dY;
-    }
-
-    public void setX(double dX) {
-        this.dX = dX;
-    }
-
-    public void setY(double dY) {
-        this.dY = dY;
+    public void setLocation(Vector2 vLocation) {
+        this.vLocation = vLocation;
     }
 
     enum Direction {

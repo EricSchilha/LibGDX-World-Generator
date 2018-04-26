@@ -1,6 +1,7 @@
 package gdx.pengwin.Release2_0;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 
@@ -19,7 +20,7 @@ public class Chunk {
         this.arsprTiles = new SprTile[CHUNK_SIZE][CHUNK_SIZE];
         this.arsprNPO = new SprNPO[CHUNK_SIZE][CHUNK_SIZE];
         this.vTopLeft = vTopLeft;
-        randNPO = new Random((int) noise.noise((int)this.vTopLeft.x, (int)this.vTopLeft.y) * 10000);
+        randNPO = new Random((int) noise.noise((int) this.vTopLeft.x, (int) this.vTopLeft.y) * 10000);
         generateMap();
     }
 
@@ -54,11 +55,11 @@ public class Chunk {
 
     public void draw(SpriteBatch batch, SprPlayer player) {
         for (int y = 0; y < arsprTiles.length; y++) {
-            for (int x = 0; x < arsprTiles[y].length; x++) {
+            for (int x = 0; x < arsprTiles[0].length; x++) {
                 if (arsprTiles[y][x].TILE_SIZE * (vTopLeft.x - player.getLocation().x + x + 1) > 0 && arsprTiles[y][x].TILE_SIZE * (vTopLeft.x - player.getLocation().x + x) < Gdx.graphics.getWidth() && arsprTiles[y][x].TILE_SIZE * (vTopLeft.y - player.getLocation().y + y + 1) > 0 && arsprTiles[y][x].TILE_SIZE * (vTopLeft.y - player.getLocation().y + y) < Gdx.graphics.getHeight()) {
-                    arsprTiles[y][x].draw(batch, (float) (arsprTiles[y][x].TILE_SIZE * (vTopLeft.x - player.getLocation().x + x)), (float) (arsprTiles[y][x].TILE_SIZE * (vTopLeft.y - player.getLocation().y + y)));
+                    arsprTiles[y][x].draw(batch, (arsprTiles[y][x].TILE_SIZE * (vTopLeft.x - player.getLocation().x + x)), (arsprTiles[y][x].TILE_SIZE * (vTopLeft.y - player.getLocation().y + y)));
                     if (arsprNPO[y][x] != null) {
-                        arsprNPO[y][x].draw(batch, (float) (arsprNPO[y][x].OBJECT_WIDTH * (vTopLeft.x - player.getLocation().x + x)), (float) (arsprNPO[y][x].OBJECT_HEIGHT * (vTopLeft.y - player.getLocation().y + y)));
+                        arsprNPO[y][x].draw(batch, (arsprNPO[y][x].OBJECT_WIDTH * (vTopLeft.x - player.getLocation().x + x)), (arsprNPO[y][x].OBJECT_HEIGHT * (vTopLeft.y - player.getLocation().y + y)));
                     }
                 }
             }

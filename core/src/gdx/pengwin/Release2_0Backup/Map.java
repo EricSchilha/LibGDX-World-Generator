@@ -4,8 +4,10 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
 
+import java.util.ArrayList;
+
 public class Map {
-    public Chunk[][] arChunks = new Chunk[5][5];
+    public Chunk[][] arChunks = new Chunk[3][3];
     public int nSeed;
     public SprPlayer sprPlayer = new SprPlayer();
 
@@ -17,18 +19,18 @@ public class Map {
     private void init() {
         for (int y = 0; y < arChunks.length; y++)
             for (int x = 0; x < arChunks[y].length; x++)
-                arChunks[y][x] = new Chunk(Chunk.CHUNK_SIZE * (x - ((arChunks[y].length - 1) / 2)), Chunk.CHUNK_SIZE * (y - ((arChunks.length - 1) / 2)));
+                arChunks[y][x] = addChunk(new Vector2(Chunk.CHUNK_SIZE * (x - ((arChunks[y].length - 1) / 2)), Chunk.CHUNK_SIZE * (y - ((arChunks.length - 1) / 2))));
     }
 
 
     public void update() {
-        Vector2 vPlayerChunk = getChunkIndices(new Vector2((float) sprPlayer.getPlayerX(), (float) sprPlayer.getPlayerY()));
+        Vector2 vPlayerChunk = getChunkIndices(sprPlayer.getLocation());
         if (arChunks[arChunks[arChunks.length / 2].length / 2][arChunks.length / 2].vTopLeft.x != vPlayerChunk.x || arChunks[arChunks[arChunks.length / 2].length / 2][arChunks.length / 2].vTopLeft.y != vPlayerChunk.y) {
             int nPlayerChunkX = (int) vPlayerChunk.x;
             int nPlayerChunkY = (int) vPlayerChunk.y;
             for (int y = 0; y < arChunks.length; y++)
                 for (int x = 0; x < arChunks[y].length; x++)
-                    arChunks[y][x] = new Chunk(nPlayerChunkX - Chunk.CHUNK_SIZE * (x - ((arChunks[y].length - 1) / 2)), nPlayerChunkY - Chunk.CHUNK_SIZE * (y - ((arChunks.length - 1) / 2)));
+                    arChunks[y][x] = addChunk(new Vector2(nPlayerChunkX - Chunk.CHUNK_SIZE * (x - ((arChunks[y].length - 1) / 2)), nPlayerChunkY - Chunk.CHUNK_SIZE * (y - ((arChunks.length - 1) / 2))));
         }
         sprPlayer.move(this);
     }
@@ -40,6 +42,29 @@ public class Map {
             }
         }
         sprPlayer.draw(batch, sr);
+    }
+
+    public Chunk addChunk(Vector2 vTopLeft) {
+        for (Chunk arChunk[] : arChunks) {
+            for (Chunk chunk : arChunk) {
+                if (chunk != null)
+                    if (chunk.vTopLeft.x == vTopLeft.x && chunk.vTopLeft.y == vTopLeft.y)
+                        return chunk;
+            }
+        }
+        return new Chunk(vTopLeft);
+    }
+
+    public ArrayList<Chunk> addChunks(ArrayList<Vector2> alvTopLefts) {
+        ArrayList<Chunk> alChunks = new ArrayList<Chunk>();
+        VectorLoop: for (Vector2 vTopLeft : alvTopLefts) {
+            for (int i = 0; i < alChunks.size(); i++) {
+                vTopLeft = getChunkIndices(vTopLeft);
+                if (alChunks.get(i).vTopLeft.x == vTopLeft.x && alChunks.get(i).vTopLeft.y == vTopLeft.y) continue VectorLoop;
+            }
+            alChunks.add(addChunk(vTopLeft));
+        }
+        return alChunks;
     }
 
     public Vector2 getChunkIndices(Vector2 vPos) {

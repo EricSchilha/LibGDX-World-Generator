@@ -12,6 +12,7 @@ import java.util.Arrays;
 import java.util.Vector;
 
 
+
 public class SprPlayer extends Sprite {
     private Vector2 vLocation;
     private int nPixelX = SprTile.TILE_SIZE * 8, nPixelY = SprTile.TILE_SIZE * 8 + SprTile.TILE_SIZE;
@@ -41,10 +42,10 @@ public class SprPlayer extends Sprite {
         arnKeys = Arrays.copyOf(ScrGame.arnKeys, ScrGame.arnKeys.length);
         nVertMovement = arnKeys[1] - arnKeys[0];
         nHoriMovement = arnKeys[3] - arnKeys[2];
-        if ((nVertMovement == -1 && canMove(Direction.NORTH, map)) || (nVertMovement == 1 && canMove(Direction.SOUTH, map))) {
+        if (nVertMovement == -1 || nVertMovement == 1) {
             setLocation(new Vector2(vLocation.x, vLocation.y + (nVertMovement * fSpeed)));
         }
-        if ((nHoriMovement == -1 && canMove(Direction.EAST, map)) || (nHoriMovement == 1 && canMove(Direction.WEST, map))) {
+        if (nHoriMovement == -1 || nHoriMovement == 1) {
             setLocation(new Vector2(vLocation.x + (nHoriMovement * fSpeed), vLocation.y));
         }
     }
@@ -52,7 +53,7 @@ public class SprPlayer extends Sprite {
     //TODO: I don't like this code, but it works (actually it doesn't yet). I might try to improve it later.
     //This needs to check if the characters bounding rectangle lies on multiple chunks
 
-    boolean canMove(Direction direction, Map map) {
+    boolean canMove (Direction direction, Map map) {
         Vector2 vNewLocation = new Vector2(vLocation);
         if (direction == Direction.NORTH || direction == Direction.SOUTH) {
             vNewLocation.x += nVertMovement * fSpeed;
@@ -61,32 +62,44 @@ public class SprPlayer extends Sprite {
         }
         alvCorners.clear();
         alvCorners.add(vNewLocation);
-        alvCorners.add(new Vector2(vNewLocation.x + (float)1, vNewLocation.y));
-        alvCorners.add(new Vector2(vNewLocation.x, vNewLocation.y + (float)1));
-        alvCorners.add(new Vector2(vNewLocation.x + (float)1, vNewLocation.y + (float)1));
-
-        map.addChunks(alvCorners, alChunks);
-        /*for(Chunk chunk : alChunks) {
-            for(int i = 0; i < alvCorners.size(); i++) {
-                try {
-                    int nTileX = (int) (alvCorners.get(i).x - chunk.vTopLeft.x);
-                    int nTileY = (int) (alvCorners.get(i).y - chunk.vTopLeft.y);
-                    System.out.println(alvCorners.get(i));
-                    if (chunk.arsprNPO[nTileY][nTileX] != null) {
-                        System.out.println("TREE HIT");
-                        return false;
-                    }
-                } catch (Exception e) {
-
+        alvCorners.add(new Vector2(vNewLocation.x + (float) 1, vNewLocation.y));
+        alvCorners.add(new Vector2(vNewLocation.x, vNewLocation.y + 1));
+        alvCorners.add(new Vector2(vNewLocation.x + (float) 1, vNewLocation.y + 1));
+        alChunks = map.addChunks(alvCorners);
+        /*for (int i = 0; i < alvCorners.size(); i++) {
+            try {
+                Chunk chunk = (i >= alChunks.size()) ? alChunks.get(alChunks.size() - 1) : alChunks.get(i);
+                int nTileX = (int) (alvCorners.get(i).x - chunk.vTopLeft.x);
+                int nTileY = (int) (alvCorners.get(i).y - chunk.vTopLeft.y);
+                if (chunk.arsprNPO[nTileY][nTileX] != null) {
+                    return false;
                 }
+
+            } catch (Exception e) {
+
             }
+//            for (int y = 0; y < chunk.arsprNPO.length; y++) {
+//                for (int x = 0; x < chunk.arsprNPO[0].length; x++) {
+//                    if(nTileX == x && nTileY == y) System.out.print("*");
+//                    if (chunk.arsprNPO[y][x] == null) {
+//                        System.out.print("N ");
+//                    } else if (chunk.arsprNPO[y][x] != null && chunk.arsprNPO[y][x].npoType == NPOType.Tree) {
+//                        System.out.print("T ");
+//                    }
+//                }
+//                System.out.println();
+//            }
         }*/
         return true;
     }
 
-    public Vector2 getLocation(){ return vLocation; }
+    public Vector2 getLocation() {
+        return vLocation;
+    }
 
-    public void setLocation(Vector2 vLocation){ this.vLocation = vLocation;}
+    public void setLocation(Vector2 vLocation) {
+        this.vLocation = vLocation;
+    }
 
     enum Direction {
         NORTH, SOUTH, EAST, WEST
