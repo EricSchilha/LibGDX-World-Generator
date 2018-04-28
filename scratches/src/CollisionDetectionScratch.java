@@ -94,7 +94,7 @@ public class CollisionDetectionScratch extends PApplet {
                 int nTileX, nTileY;
                 nTileX = (int) dNewX;
                 nTileY = (int) dNewY;
-//                System.out.println(dNewX + "\t" + dNewY);
+                System.out.println(dNewX + "\t" + dNewY);
                 if (arObjects[nTileY][nTileX]) return false;
                 if (dNewX % 1 > dSpeed / 2) {
                     try {
