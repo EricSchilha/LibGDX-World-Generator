@@ -17,14 +17,10 @@ public class SprNPO extends Sprite {
 
     NPOType npoType;
 
-    public SprNPO(NPOType npoType) {
+    public SprNPO(NPOType npoType, float fX, float fY) {
         super(txmObject.get(npoType));
         setSize(OBJECT_WIDTH, -OBJECT_WIDTH);
+        setPosition(fX, fY);
         this.npoType = npoType;
-    }
-
-    public void draw(SpriteBatch batch, float fX, float fY) {
-        setPosition(fX, fY + OBJECT_WIDTH);
-        super.draw(batch);
     }
 }
