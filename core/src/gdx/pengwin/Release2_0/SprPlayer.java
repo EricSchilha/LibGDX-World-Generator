@@ -3,13 +3,10 @@ package gdx.pengwin.Release2_0;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
-import gdx.pengwin.Release1_0.Tile;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Vector;
 
 
 public class SprPlayer extends Sprite {
@@ -40,22 +37,23 @@ public class SprPlayer extends Sprite {
         nHoriMovement = arnKeys[3] - arnKeys[2];
         if (nHoriMovement == -1 && canMove(Direction.WEST, map) || nHoriMovement == 1 && canMove(Direction.EAST, map)) {
             setLocation(new Vector2(vLocation.x + (nHoriMovement * fSpeed), vLocation.y));
-            setX((vLocation.x - map.getChunkIndices(vLocation).x) * Tile.TILE_SIZE);
+            setX((vLocation.x - map.getChunkIndices(vLocation).x) * SprTile.TILE_SIZE);
         }
         if (nVertMovement == -1 && canMove(Direction.NORTH, map) || nVertMovement == 1 && canMove(Direction.SOUTH, map)) {
             setLocation(new Vector2(vLocation.x, vLocation.y + (nVertMovement * fSpeed)));
-            setY((vLocation.y - map.getChunkIndices(vLocation).y) * Tile.TILE_SIZE);
+            setY((vLocation.y - map.getChunkIndices(vLocation).y) * SprTile.TILE_SIZE);
 
         }
     }
 
     //TODO: I don't like this code, but it works (actually it doesn't yet). I might try to improve it later.
     boolean canMove(Direction direction, Map map) {
+        if (true) return true; //Debug
         Vector2 vNewLocation = new Vector2(vLocation);
-        if (direction == Direction.NORTH || direction == Direction.SOUTH) {
-            vNewLocation.x += nVertMovement * fSpeed / 2;
-        } else if (direction == Direction.EAST || direction == Direction.WEST) {
-            vNewLocation.y += nHoriMovement * fSpeed / 2;
+        if (direction == Direction.EAST || direction == Direction.WEST) {
+            vNewLocation.x += nHoriMovement * fSpeed / 2;
+        } else if (direction == Direction.NORTH || direction == Direction.SOUTH) {
+            vNewLocation.y += nVertMovement * fSpeed / 2;
         }
         alvCorners.clear();
         alvCorners.add(new Vector2(vNewLocation.x, vNewLocation.y - 1));                      //Top Left

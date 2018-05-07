@@ -1,7 +1,6 @@
 package gdx.pengwin.Release2_0Backup;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 
@@ -56,10 +55,10 @@ public class Chunk {
     public void draw(SpriteBatch batch, SprPlayer player) {
         for (int y = 0; y < arsprTiles.length; y++) {
             for (int x = 0; x < arsprTiles[0].length; x++) {
-                if (arsprTiles[y][x].TILE_SIZE * (vTopLeft.x - player.getLocation().x + x + 1) > 0 && arsprTiles[y][x].TILE_SIZE * (vTopLeft.x - player.getLocation().x + x) < Gdx.graphics.getWidth() && arsprTiles[y][x].TILE_SIZE * (vTopLeft.y - player.getLocation().y + y + 1) > 0 && arsprTiles[y][x].TILE_SIZE * (vTopLeft.y - player.getLocation().y + y) < Gdx.graphics.getHeight()) {
-                    arsprTiles[y][x].draw(batch, (arsprTiles[y][x].TILE_SIZE * (vTopLeft.x - player.getLocation().x + x)), (arsprTiles[y][x].TILE_SIZE * (vTopLeft.y - player.getLocation().y + y)));
+                if (arsprTiles[y][x].TILE_SIZE * (vTopLeft.x - player.getLocation().x + x + 1) + player.nPixelX > 0 && arsprTiles[y][x].TILE_SIZE * (vTopLeft.x - player.getLocation().x + x) + player.nPixelX < Gdx.graphics.getWidth() && arsprTiles[y][x].TILE_SIZE * (vTopLeft.y - player.getLocation().y + y + 1) + player.nPixelY > 0 && arsprTiles[y][x].TILE_SIZE * (vTopLeft.y - player.getLocation().y + y) + player.nPixelY < Gdx.graphics.getHeight()) {
+                    arsprTiles[y][x].draw(batch, arsprTiles[y][x].TILE_SIZE * (vTopLeft.x - player.getLocation().x + x) + player.nPixelX, arsprTiles[y][x].TILE_SIZE * (vTopLeft.y - player.getLocation().y + y) + player.nPixelY);
                     if (arsprNPO[y][x] != null) {
-                        arsprNPO[y][x].draw(batch, (arsprNPO[y][x].OBJECT_WIDTH * (vTopLeft.x - player.getLocation().x + x)), (arsprNPO[y][x].OBJECT_HEIGHT * (vTopLeft.y - player.getLocation().y + y)));
+                        arsprNPO[y][x].draw(batch, arsprNPO[y][x].OBJECT_WIDTH * (vTopLeft.x - player.getLocation().x + x) + player.nPixelX, arsprNPO[y][x].OBJECT_HEIGHT * (vTopLeft.y - player.getLocation().y + y) + player.nPixelY);
                     }
                 }
             }

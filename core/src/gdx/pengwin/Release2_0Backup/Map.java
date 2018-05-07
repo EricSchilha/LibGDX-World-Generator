@@ -45,6 +45,7 @@ public class Map {
     }
 
     public Chunk addChunk(Vector2 vTopLeft) {
+        vTopLeft = getChunkIndices(vTopLeft);
         for (Chunk arChunk[] : arChunks) {
             for (Chunk chunk : arChunk) {
                 if (chunk != null)
