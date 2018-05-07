@@ -18,7 +18,8 @@ public class Map {
     private void init() {
         for (int y = 0; y < arChunks.length; y++)
             for (int x = 0; x < arChunks[y].length; x++)
-                arChunks[y][x] = addChunk(new Vector2(Chunk.CHUNK_SIZE * (x - ((arChunks[y].length - 1) / 2)), Chunk.CHUNK_SIZE * (y - ((arChunks.length - 1) / 2))), new Vector2(x, y));
+                arChunks[y][x] = addChunk(new Vector2(Chunk.CHUNK_SIZE * (x - ((arChunks[y].length - 1) / 2)), Chunk.CHUNK_SIZE * (y - ((arChunks.length - 1) / 2))),
+                        new Vector2(x * SprTile.TILE_SIZE * Chunk.CHUNK_SIZE, y * SprTile.TILE_SIZE * Chunk.CHUNK_SIZE));
     }
 
 
@@ -29,12 +30,12 @@ public class Map {
             int nPlayerChunkY = (int) vPlayerChunk.y;
             for (int y = 0; y < arChunks.length; y++)
                 for (int x = 0; x < arChunks[y].length; x++)
-                    arChunks[y][x] = addChunk(new Vector2(nPlayerChunkX - Chunk.CHUNK_SIZE * (x - ((arChunks[y].length - 1) / 2)), nPlayerChunkY - Chunk.CHUNK_SIZE * (y - ((arChunks.length - 1) / 2))), new Vector2(x, y));
+                    arChunks[y][x] = addChunk(new Vector2(nPlayerChunkX - Chunk.CHUNK_SIZE * (x - ((arChunks[y].length - 1) / 2)), nPlayerChunkY - Chunk.CHUNK_SIZE * (y - ((arChunks.length - 1) / 2))), new Vector2(x * SprTile.TILE_SIZE * Chunk.CHUNK_SIZE, y * SprTile.TILE_SIZE * Chunk.CHUNK_SIZE));
         }
 
         for (int y = 0; y < arChunks.length; y++) {
             for (int x = 0; x < arChunks[y].length; x++) {
-                arChunks[y][x].setOrigin(new Vector2(x, y));
+                arChunks[y][x].vOrigin = new Vector2(x * SprTile.TILE_SIZE * Chunk.CHUNK_SIZE, y * SprTile.TILE_SIZE * Chunk.CHUNK_SIZE);
             }
         }
         sprPlayer.move(this);

@@ -63,9 +63,17 @@ public class SprPlayer extends Sprite {
         alvCorners.add(vNewLocation);                                                            //Bottom Left
         alvCorners.add(new Vector2(vNewLocation.x + 1, vNewLocation.y));                      //Bottom Right
         alChunks = map.addChunks(alvCorners);
-        for (int i = 0; i < 1/*alvCorners.size()*/; i++) {
+        for (int i = 0; i < alvCorners.size(); i++) {
             try {
-                Chunk chunk = alChunks.get(i); //Assigning null is likely a bad idea
+                Chunk chunk = alChunks.get(0);
+                for(int j = 0; j < alChunks.size(); j++) {
+                    if(map.getChunkIndices(alvCorners.get(i)).equals(alChunks.get(j))) {
+                        chunk = alChunks.get(j);
+                        System.out.println("COMPARE WORKED");
+                        break;
+                    }
+                }
+
                 Vector2 vTileLocation = new Vector2(alvCorners.get(i).x - chunk.vTopLeft.x, alvCorners.get(i).y - chunk.vTopLeft.y);
                 if (chunk.arsprNPO[(int)vTileLocation.y][(int)vTileLocation.x] != null) {
                     System.out.println("1");

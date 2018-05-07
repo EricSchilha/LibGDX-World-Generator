@@ -29,7 +29,7 @@ public class Chunk {
         this.arsprTiles = new SprTile[CHUNK_SIZE][CHUNK_SIZE];
         this.arsprNPO = new SprNPO[CHUNK_SIZE][CHUNK_SIZE];
         this.vTopLeft = vTopLeft;
-        setOrigin(vOrigin);
+        this.vOrigin = vOrigin;
         randNPO = new Random((int) noise.noise((int) this.vTopLeft.x, (int) this.vTopLeft.y) * 10000);
         generateMap();
     }
@@ -64,9 +64,9 @@ public class Chunk {
     }
 
 
-    public void setOrigin(Vector2 vOrigin) {
-        this.vOrigin = new Vector2(vOrigin.x * SprTile.TILE_SIZE * CHUNK_SIZE, vOrigin.y * SprTile.TILE_SIZE * CHUNK_SIZE);
-    }
+//    public Vector2 setOrigin(Vector2 vOrigin) {
+//        return new Vector2(vOrigin.x * SprTile.TILE_SIZE * CHUNK_SIZE, vOrigin.y * SprTile.TILE_SIZE * CHUNK_SIZE);
+//    }
 
     public void draw(SpriteBatch batch, SprPlayer player) {
         for (int y = 0; y < arsprTiles.length; y++) {
