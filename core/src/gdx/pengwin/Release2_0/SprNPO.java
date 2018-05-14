@@ -4,7 +4,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import gdx.pengwin.Release1_0.Tile;
 
 import java.util.HashMap;
 
@@ -17,10 +16,14 @@ public class SprNPO extends Sprite {
 
     NPOType npoType;
 
-    public SprNPO(NPOType npoType, float fX, float fY) {
+    public SprNPO(NPOType npoType) {
         super(txmObject.get(npoType));
         setSize(OBJECT_WIDTH, -OBJECT_WIDTH);
-        setPosition(fX, fY);
         this.npoType = npoType;
+    }
+
+    public void draw(SpriteBatch batch, float fX, float fY) {
+        setPosition(fX, fY + OBJECT_WIDTH);
+        super.draw(batch);
     }
 }

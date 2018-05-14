@@ -17,13 +17,17 @@ public class SprTile extends Sprite {
 
     TileType tileType;
 
-    public SprTile(TileType tileType, float fX, float fY) {
+    public SprTile(TileType tileType) {
         super(txmTile.get(tileType), TILE_SIZE, TILE_SIZE);
-        setPosition(fX, fY);
         this.tileType = tileType;
     }
 
-    /*public static void resize() { //FIX THIS LATER
+    public void draw(SpriteBatch batch, float fX, float fY) {
+        setPosition(fX, fY);
+        super.draw(batch);
+    }
+
+    public static void resize() { //FIX THIS LATER
         TILE_SIZE = (Gdx.graphics.getWidth() + Gdx.graphics.getHeight()) / Chunk.CHUNK_SIZE; //In pixels
-    }*/
+    }
 }
