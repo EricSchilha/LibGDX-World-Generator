@@ -11,6 +11,6 @@ public class DesktopLauncher {
         config.width = 800;
         config.height = 800;
         //config.resizable = false;
-        new LwjglApplication(new gdx.pengwin.Release2_0Backup.GamMain(), config);
+        new LwjglApplication(new gdx.pengwin.CameraTest.GamMain(), config);
     }
 }

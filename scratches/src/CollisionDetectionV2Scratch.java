@@ -37,7 +37,7 @@ public class CollisionDetectionV2Scratch extends PApplet {
         }
         fill(0, 0, 255, 200);
         noStroke();
-        rect( player.vLocation.x * TILE_SIZE,  player.vLocation.y * TILE_SIZE, TILE_SIZE, TILE_SIZE);
+        rect(player.vLocation.x * TILE_SIZE, player.vLocation.y * TILE_SIZE, TILE_SIZE, TILE_SIZE);
         stroke(1);
         player.move();
     }
@@ -67,54 +67,80 @@ public class CollisionDetectionV2Scratch extends PApplet {
     class Player {
         PVector vLocation, vNewLocation;
         PVector vTopLeft, vTopRight, vBottomLeft, vBottomRight;
-        double dSpeed = 0.1;
+        float fSpeed = (float) 0.1;
 
         public Player(int nW, int nH) {
-            vLocation = new PVector((int) random(nW / 2 - nW / 4, nW / 2 + nW / 4) + (float)0.0001,
-                    (int) random(nH / 2 - nH / 4, nH / 2 + nH / 4) + (float)0.0001);
+            vLocation = new PVector((int) random(nW / 2 - nW / 4, nW / 2 + nW / 4) + (float) 0.0001,
+                    (int) random(nH / 2 - nH / 4, nH / 2 + nH / 4) + (float) 0.0001);
         }
 
         public void move() {
-            if (arnKeys[1] == -1 && (canMove(Direction.EAST)) || (arnKeys[1] == 1 && canMove(Direction.WEST))) {
-                vLocation.x += arnKeys[1] * dSpeed;
+
+            if (arnKeys[1] == -1) {
+                if (canMove(Direction.WEST)) {
+                    vLocation.x += arnKeys[1] * fSpeed;
+                }
+            } else if (arnKeys[1] == 1) {
+                if (canMove(Direction.EAST)) {
+                    vLocation.x += arnKeys[1] * fSpeed;
+                }
             }
-            if ((arnKeys[0] == -1 && canMove(Direction.NORTH)) || (arnKeys[0] == 1 && canMove(Direction.SOUTH))) {
-                vLocation.y += arnKeys[0] * dSpeed;
+
+            if (arnKeys[0] == -1) {
+                if (canMove(Direction.NORTH)) {
+                    vLocation.y += arnKeys[0] * fSpeed;
+                }
+            } else if (arnKeys[0] == 1) {
+                if (canMove(Direction.SOUTH)) {
+                    vLocation.y += arnKeys[0] * fSpeed;
+                }
             }
         }
 
 
         //TODO: improve this code
         boolean canMove(Direction direction) {
-            try {
-                vNewLocation = vLocation;
-                if (direction == Direction.EAST || direction == Direction.WEST) {
-                    vNewLocation.x += arnKeys[1] * dSpeed;
-                }
-                if (direction == Direction.NORTH || direction == Direction.SOUTH) {
-                    vNewLocation.y += arnKeys[0] * dSpeed;
-                }
-                vTopLeft = vNewLocation;
-                vTopRight = new PVector(vNewLocation.x + 1, vNewLocation.y);
-                vBottomLeft = new PVector(vNewLocation.x, vNewLocation.y + 1);
-                vBottomRight = new PVector(vNewLocation.x + 1, vNewLocation.y + 1);
+            vNewLocation = vLocation.copy();
+            if (direction == Direction.EAST || direction == Direction.WEST) {
+                vNewLocation.x += arnKeys[1] * fSpeed / 2;
+            }
+            if (direction == Direction.NORTH || direction == Direction.SOUTH) {
+                vNewLocation.y += arnKeys[0] * fSpeed / 2;
+            }
+            vTopLeft = vNewLocation.copy();
+            vTopRight = new PVector(vNewLocation.x + 1, vNewLocation.y);
+            vBottomLeft = new PVector(vNewLocation.x, vNewLocation.y + 1);
+            vBottomRight = new PVector(vNewLocation.x + 1, vNewLocation.y + 1);
+            System.out.println(vTopLeft);
+            int nTileX, nTileY;
 
-                int nTileX, nTileY;
-
-                nTileX = (int) vTopLeft.x;
-                nTileY = (int) vTopLeft.y;
-                if (arObjects[nTileY][nTileX]) return false;
-                nTileX = (int) vTopRight.x;
-                nTileY = (int) vTopRight.y;
-                if (arObjects[nTileY][nTileX]) return false;
-                nTileX = (int) vBottomLeft.x;
-                nTileY = (int) vBottomLeft.y;
-                if (arObjects[nTileY][nTileX]) return false;
-                nTileX = (int) vBottomRight.x;
-                nTileY = (int) vBottomRight.y;
-                if (arObjects[nTileY][nTileX]) return false;
-            } catch (Exception e) {
-                return false;
+            nTileX = (int) vTopLeft.x;
+            nTileY = (int) vTopLeft.y;
+            if (vTopLeft.x % 1 < 1 - (fSpeed / 2) || vTopLeft.y % 1 < 1 - (fSpeed / 2)) {// (fSpeed / 2) prevents the player from moving too far into the block and getting stuck
+                if (arObjects[nTileY][nTileX]) {
+                    return false;
+                }
+            }
+            nTileX = (int) vTopRight.x;
+            nTileY = (int) vTopRight.y;
+            if (vTopRight.x % 1 > fSpeed / 2 || vTopRight.y % 1 < 1 - (fSpeed / 2)) {
+                if (arObjects[nTileY][nTileX]) {
+                    return false;
+                }
+            }
+            nTileX = (int) vBottomLeft.x;
+            nTileY = (int) vBottomLeft.y;
+            if (vBottomLeft.x % 1 < 1 - (fSpeed / 2) || vBottomLeft.y % 1 > fSpeed / 2) {
+                if (arObjects[nTileY][nTileX]) {
+                    return false;
+                }
+            }
+            nTileX = (int) vBottomRight.x;
+            nTileY = (int) vBottomRight.y;
+            if (vBottomRight.x % 1 > fSpeed / 2 || vBottomRight.y % 1 > fSpeed / 2) {
+                if (arObjects[nTileY][nTileX]) {
+                    return false;
+                }
             }
             return true;
         }
