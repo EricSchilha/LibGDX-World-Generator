@@ -6,7 +6,7 @@ import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 public class DesktopLauncher {
     public static LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
 
-    public static void main (String[] arg) {
+    public static void main (String[] args) {
         config.title = "PENGWIN";
         config.width = 800;
         config.height = 800;

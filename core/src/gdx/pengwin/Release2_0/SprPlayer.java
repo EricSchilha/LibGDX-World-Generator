@@ -12,14 +12,14 @@ import java.util.Arrays;
 
 
 public class SprPlayer extends Sprite {
-    private Vector2 vLocation;
+    private Vector2 vLocation, vNewLocation, vNewNewLocation;
     public int nPixelX = SprTile.TILE_SIZE * 8, nPixelY = SprTile.TILE_SIZE * 8 + SprTile.TILE_SIZE;
     private int nMinDivisor = 4096;
     private float fSpeed = (float) 0.1;
     public static Texture txPlayer = new Texture(Gdx.files.internal("Dude1.png"));
-    int[] arnKeys;
+    public int[] arnKeys;
     int nVertMovement = 0, nHoriMovement = 0;
-    ArrayList<Vector2> alvCorners = new ArrayList<Vector2>();
+    Vector2[] arvCorners = new Vector2[4];
 
     public SprPlayer() {
         super(txPlayer);
@@ -27,7 +27,7 @@ public class SprPlayer extends Sprite {
         this.vLocation = new Vector2(
                 (int) (Math.random() * Integer.MAX_VALUE / nMinDivisor + Integer.MAX_VALUE / nMinDivisor / 2) + (float) 0.0001,
                 (int) (Math.random() * Integer.MAX_VALUE / nMinDivisor + Integer.MAX_VALUE / nMinDivisor / 2) + (float) 0.0001);//Small decimal required for smooth collision
-        this.arnKeys = Arrays.copyOf(ScrGame.arnKeys, ScrGame.arnKeys.length);
+        this.vNewLocation = vLocation;
     }
 
     public void draw(SpriteBatch batch, ShapeRenderer sr) {
@@ -36,7 +36,6 @@ public class SprPlayer extends Sprite {
     }
 
     public void move(Map map) {
-        arnKeys = Arrays.copyOf(ScrGame.arnKeys, ScrGame.arnKeys.length);
         nVertMovement = arnKeys[1] - arnKeys[0];
         nHoriMovement = arnKeys[3] - arnKeys[2];
         if (nHoriMovement == -1 && canMove(Direction.WEST, map) || nHoriMovement == 1 && canMove(Direction.EAST, map)) {
@@ -49,29 +48,27 @@ public class SprPlayer extends Sprite {
 
     //TODO: I don't like this code, but it works (actually it doesn't yet). I might try to improve it later.
     boolean canMove(Direction direction, Map map) {
-        Vector2 vNewLocation = new Vector2(vLocation);
+        vNewLocation.set(vLocation);
         if (direction == Direction.EAST || direction == Direction.WEST) {
             vNewLocation.x += nHoriMovement * fSpeed / 2;
         }
         if (direction == Direction.NORTH || direction == Direction.SOUTH) {
             vNewLocation.y += nVertMovement * fSpeed / 2;
         }
-        alvCorners.clear();
-        alvCorners.add(new Vector2(vNewLocation.x, vNewLocation.y - 1));                      //Top Left
-        alvCorners.add(new Vector2(vNewLocation.x - 1, vNewLocation.y + 1));               //Top Right
-        alvCorners.add(vNewLocation);                                                            //Bottom Left
-        alvCorners.add(new Vector2(vNewLocation.x + 1, vNewLocation.y));                      //Bottom Right
+        vNewNewLocation.set(vNewLocation);                                  //Bottom Left
+        arvCorners[2] = vNewLocation;
+        vNewLocation.set(vNewNewLocation.x, vNewNewLocation.y - 1);         //Top Left
+        arvCorners[0] = vNewLocation;
+        vNewLocation.set(vNewNewLocation.x + 1, vNewNewLocation.y - 1);     //Top Right
+        arvCorners[1] = vNewLocation;
+        vNewLocation.set(vNewNewLocation.x + 1, vNewNewLocation.y);         //Bottom Right
+        arvCorners[3] = vNewLocation;
 
-//        alvCorners.add(vNewLocation);                                                            //Top Left
-//        alvCorners.add(new Vector2(vNewLocation.x + 1, vNewLocation.y));                      //Top Right
-//        alvCorners.add(new Vector2(vNewLocation.x, vNewLocation.y + 1));                      //Bottom Left
-//        alvCorners.add(new Vector2(vNewLocation.x + 1, vNewLocation.y + 1));               //Bottom Right
-        for (int i = 0; i < alvCorners.size(); i++) {
+        for (int i = 0; i < arvCorners.length; i++) {
             try {
-                Chunk chunk = map.addChunk(alvCorners.get(i));
-                Vector2 vTileLocation = new Vector2(alvCorners.get(i).x - chunk.vTopLeft.x, alvCorners.get(i).y - chunk.vTopLeft.y);
-                System.out.println(vTileLocation);
-                if (chunk.arsprNPO[(int) vTileLocation.y][(int) vTileLocation.x] != null) {
+                Chunk chunk = map.addChunk(arvCorners[i]);
+                vNewLocation.set(arvCorners[i].x - chunk.vTopLeft.x, arvCorners[i].y - chunk.vTopLeft.y);
+                if (chunk.arsprNPO[(int) vNewLocation.y][(int) vNewLocation.x] != null) {
                     return false;
                 }
             } catch (Exception e) {

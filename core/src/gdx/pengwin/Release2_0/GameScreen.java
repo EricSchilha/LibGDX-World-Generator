@@ -20,7 +20,6 @@ public abstract class GameScreen implements Screen, InputProcessor {
     ScreenType screenType;
     Texture txButtonUp, txButtonDown;
     ArrayList<SprButton> alsprButtons = new ArrayList<SprButton>();
-    public static int[] arnKeys;
 
     @Override
     public void show() {

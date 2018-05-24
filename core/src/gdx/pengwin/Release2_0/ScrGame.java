@@ -18,7 +18,6 @@ public class ScrGame extends GameScreen {
         super.screenType = this.screenType;
         super.txButtonUp = this.txButtonUp;
         super.txButtonDown = this.txButtonDown;
-        arnKeys = new int[4];
         map = new Map(0);
 
     }
@@ -52,19 +51,19 @@ public class ScrGame extends GameScreen {
         switch (keyCode) {
             case Input.Keys.W:
             case Input.Keys.UP:
-                arnKeys[0] = 1;
+                map.sprPlayer.arnKeys[0] = 1;
                 break;
             case Input.Keys.S:
             case Input.Keys.DOWN:
-                arnKeys[1] = 1;
+                map.sprPlayer.arnKeys[1] = 1;
                 break;
             case Input.Keys.A:
             case Input.Keys.LEFT:
-                arnKeys[2] = 1;
+                map.sprPlayer.arnKeys[2] = 1;
                 break;
             case Input.Keys.D:
             case Input.Keys.RIGHT:
-                arnKeys[3] = 1;
+                map.sprPlayer.arnKeys[3] = 1;
                 break;
         }
         return false;
@@ -75,19 +74,19 @@ public class ScrGame extends GameScreen {
         switch (keyCode) {
             case Input.Keys.W:
             case Input.Keys.UP:
-                arnKeys[0] = 0;
+                map.sprPlayer.arnKeys[0] = 0;
                 break;
             case Input.Keys.S:
             case Input.Keys.DOWN:
-                arnKeys[1] = 0;
+                map.sprPlayer.arnKeys[1] = 0;
                 break;
             case Input.Keys.A:
             case Input.Keys.LEFT:
-                arnKeys[2] = 0;
+                map.sprPlayer.arnKeys[2] = 0;
                 break;
             case Input.Keys.D:
             case Input.Keys.RIGHT:
-                arnKeys[3] = 0;
+                map.sprPlayer.arnKeys[3] = 0;
                 break;
         }
         return false;
