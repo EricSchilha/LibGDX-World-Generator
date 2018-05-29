@@ -17,7 +17,7 @@ public class SprPlayer extends Sprite {
     private int nMinDivisor = 4096;
     private float fSpeed = (float) 0.1;
     public static Texture txPlayer = new Texture(Gdx.files.internal("Dude1.png"));
-    public int[] arnKeys;
+    public int[] arnKeys = {0, 0, 0, 0};
     int nVertMovement = 0, nHoriMovement = 0;
     Vector2[] arvCorners = new Vector2[4];
 
@@ -25,9 +25,10 @@ public class SprPlayer extends Sprite {
         super(txPlayer);
         setSize(SprTile.TILE_SIZE, -SprTile.TILE_SIZE);
         this.vLocation = new Vector2(
-                (int) (Math.random() * Integer.MAX_VALUE / nMinDivisor + Integer.MAX_VALUE / nMinDivisor / 2) + (float) 0.0001,
-                (int) (Math.random() * Integer.MAX_VALUE / nMinDivisor + Integer.MAX_VALUE / nMinDivisor / 2) + (float) 0.0001);//Small decimal required for smooth collision
-        this.vNewLocation = vLocation;
+                (int) (Math.random() * Integer.MAX_VALUE / nMinDivisor + Integer.MAX_VALUE / nMinDivisor / 2),
+                (int) (Math.random() * Integer.MAX_VALUE / nMinDivisor + Integer.MAX_VALUE / nMinDivisor / 2));
+        this.vNewLocation = new Vector2();
+        this.vNewNewLocation = new Vector2();
     }
 
     public void draw(SpriteBatch batch, ShapeRenderer sr) {
@@ -46,7 +47,6 @@ public class SprPlayer extends Sprite {
         }
     }
 
-    //TODO: I don't like this code, but it works (actually it doesn't yet). I might try to improve it later.
     boolean canMove(Direction direction, Map map) {
         vNewLocation.set(vLocation);
         if (direction == Direction.EAST || direction == Direction.WEST) {
@@ -56,18 +56,19 @@ public class SprPlayer extends Sprite {
             vNewLocation.y += nVertMovement * fSpeed / 2;
         }
         vNewNewLocation.set(vNewLocation);                                  //Bottom Left
-        arvCorners[2] = vNewLocation;
+        arvCorners[2] = vNewLocation.cpy();
         vNewLocation.set(vNewNewLocation.x, vNewNewLocation.y - 1);         //Top Left
-        arvCorners[0] = vNewLocation;
+        arvCorners[0] = vNewLocation.cpy();
         vNewLocation.set(vNewNewLocation.x + 1, vNewNewLocation.y - 1);     //Top Right
-        arvCorners[1] = vNewLocation;
+        arvCorners[1] = vNewLocation.cpy();
         vNewLocation.set(vNewNewLocation.x + 1, vNewNewLocation.y);         //Bottom Right
-        arvCorners[3] = vNewLocation;
+        arvCorners[3] = vNewLocation.cpy();
 
         for (int i = 0; i < arvCorners.length; i++) {
             try {
                 Chunk chunk = map.addChunk(arvCorners[i]);
                 vNewLocation.set(arvCorners[i].x - chunk.vTopLeft.x, arvCorners[i].y - chunk.vTopLeft.y);
+                System.out.println(i + "\t" + arvCorners[i]);
                 if (chunk.arsprNPO[(int) vNewLocation.y][(int) vNewLocation.x] != null) {
                     return false;
                 }
