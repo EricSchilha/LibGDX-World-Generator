@@ -115,7 +115,6 @@ public class CollisionDetectionV2Scratch extends PApplet {
             vBottomLeft.set(vNewLocation.x, vNewLocation.y + 1);
             vBottomRight = vNewLocation.copy();
             vBottomRight.set(vNewLocation.x + 1, vNewLocation.y + 1);
-            System.out.println(vTopLeft);
 
             if (arObjects[(int) vTopLeft.y][(int) vTopLeft.x]) return false;
             if (vTopLeft.x % 1 > fSpeed) {
