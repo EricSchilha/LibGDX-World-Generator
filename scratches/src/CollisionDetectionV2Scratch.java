@@ -72,6 +72,7 @@ public class CollisionDetectionV2Scratch extends PApplet {
         public Player(int nW, int nH) {
             vLocation = new PVector((int) random(nW / 2 - nW / 4, nW / 2 + nW / 4) + (float) 0.0001,
                     (int) random(nH / 2 - nH / 4, nH / 2 + nH / 4) + (float) 0.0001);
+            System.out.println(vLocation);
         }
 
         public void move() {
@@ -98,47 +99,47 @@ public class CollisionDetectionV2Scratch extends PApplet {
         }
 
 
-        //TODO: improve this code
+        //TODO: improve this code (try-catch's are supposedly quite slow)
         boolean canMove(Direction direction) {
             vNewLocation = vLocation.copy();
             if (direction == Direction.EAST || direction == Direction.WEST) {
-                vNewLocation.x += arnKeys[1] * fSpeed / 2;
+                vNewLocation.x += arnKeys[1] * fSpeed;
             }
             if (direction == Direction.NORTH || direction == Direction.SOUTH) {
-                vNewLocation.y += arnKeys[0] * fSpeed / 2;
+                vNewLocation.y += arnKeys[0] * fSpeed;
             }
             vTopLeft = vNewLocation.copy();
-            vTopRight = new PVector(vNewLocation.x + 1, vNewLocation.y);
-            vBottomLeft = new PVector(vNewLocation.x, vNewLocation.y + 1);
-            vBottomRight = new PVector(vNewLocation.x + 1, vNewLocation.y + 1);
+            vTopRight = vNewLocation.copy();
+            vTopRight.set(vNewLocation.x + 1, vNewLocation.y);
+            vBottomLeft = vNewLocation.copy();
+            vBottomLeft.set(vNewLocation.x, vNewLocation.y + 1);
+            vBottomRight = vNewLocation.copy();
+            vBottomRight.set(vNewLocation.x + 1, vNewLocation.y + 1);
             System.out.println(vTopLeft);
-            int nTileX, nTileY;
 
-            nTileX = (int) vTopLeft.x;
-            nTileY = (int) vTopLeft.y;
-            if (vTopLeft.x % 1 < 1 - (fSpeed / 2) || vTopLeft.y % 1 < 1 - (fSpeed / 2)) {// (fSpeed / 2) prevents the player from moving too far into the block and getting stuck
-                if (arObjects[nTileY][nTileX]) {
+            if (arObjects[(int) vTopLeft.y][(int) vTopLeft.x]) return false;
+            if (vTopLeft.x % 1 > fSpeed) {
+                try {
+                    if (arObjects[(int) vTopRight.y][(int) vTopRight.x]) return false;
+                } catch (Exception e) {
                     return false;
                 }
-            }
-            nTileX = (int) vTopRight.x;
-            nTileY = (int) vTopRight.y;
-            if (vTopRight.x % 1 > fSpeed / 2 || vTopRight.y % 1 < 1 - (fSpeed / 2)) {
-                if (arObjects[nTileY][nTileX]) {
-                    return false;
+                if (vTopLeft.y % 1 > fSpeed) {
+                    try {
+                        if (arObjects[(int) vBottomLeft.y][(int) vBottomLeft.x]) return false;
+                    } catch (Exception e) {
+                        return false;
+                    }
+                    try {
+                        if (arObjects[(int) vBottomRight.y][(int) vBottomRight.x]) return false;
+                    } catch (Exception e) {
+                        return false;
+                    }
                 }
-            }
-            nTileX = (int) vBottomLeft.x;
-            nTileY = (int) vBottomLeft.y;
-            if (vBottomLeft.x % 1 < 1 - (fSpeed / 2) || vBottomLeft.y % 1 > fSpeed / 2) {
-                if (arObjects[nTileY][nTileX]) {
-                    return false;
-                }
-            }
-            nTileX = (int) vBottomRight.x;
-            nTileY = (int) vBottomRight.y;
-            if (vBottomRight.x % 1 > fSpeed / 2 || vBottomRight.y % 1 > fSpeed / 2) {
-                if (arObjects[nTileY][nTileX]) {
+            } else if (vTopLeft.y % 1 > fSpeed) {
+                try {
+                    if (arObjects[(int) vBottomLeft.y][(int) vBottomLeft.x]) return false;
+                } catch (Exception e) {
                     return false;
                 }
             }

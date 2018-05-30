@@ -25,8 +25,8 @@ public class SprPlayer extends Sprite {
         super(txPlayer);
         setSize(SprTile.TILE_SIZE, -SprTile.TILE_SIZE);
         this.vLocation = new Vector2(
-                (int) (Math.random() * Integer.MAX_VALUE / nMinDivisor + Integer.MAX_VALUE / nMinDivisor / 2),
-                (int) (Math.random() * Integer.MAX_VALUE / nMinDivisor + Integer.MAX_VALUE / nMinDivisor / 2));
+                (int) (Math.random() * Integer.MAX_VALUE / nMinDivisor + Integer.MAX_VALUE / nMinDivisor / 2) + (float)0.0001,
+                (int) (Math.random() * Integer.MAX_VALUE / nMinDivisor + Integer.MAX_VALUE / nMinDivisor / 2) + (float)0.0001);
         this.vNewLocation = new Vector2();
         this.vNewNewLocation = new Vector2();
     }
@@ -47,14 +47,17 @@ public class SprPlayer extends Sprite {
         }
     }
 
+    //TODO: improve this code (try-catch's are supposedly quite slow)
     boolean canMove(Direction direction, Map map) {
         vNewLocation.set(vLocation);
         if (direction == Direction.EAST || direction == Direction.WEST) {
-            vNewLocation.x += nHoriMovement * fSpeed / 2;
+            vNewLocation.x += nHoriMovement * fSpeed;
         }
         if (direction == Direction.NORTH || direction == Direction.SOUTH) {
-            vNewLocation.y += nVertMovement * fSpeed / 2;
+            vNewLocation.y += nVertMovement * fSpeed;
         }
+
+        //Reordered array to make it easier to use (0 is Top Left)
         vNewNewLocation.set(vNewLocation);                                  //Bottom Left
         arvCorners[2] = vNewLocation.cpy();
         vNewLocation.set(vNewNewLocation.x, vNewNewLocation.y - 1);         //Top Left
@@ -64,17 +67,56 @@ public class SprPlayer extends Sprite {
         vNewLocation.set(vNewNewLocation.x + 1, vNewNewLocation.y);         //Bottom Right
         arvCorners[3] = vNewLocation.cpy();
 
+        //*
+        Chunk chunk = map.addChunk(arvCorners[0]);  //TL
+        vNewLocation.set(arvCorners[0].x - chunk.vTopLeft.x, arvCorners[0].y - chunk.vTopLeft.y);
+        if (chunk.arsprNPO[(int) vNewLocation.y][(int) vNewLocation.x] != null) return false;
+        if (arvCorners[0].x % 1 > fSpeed) {
+            try {
+                chunk = map.addChunk(arvCorners[1]);  //TR
+                vNewLocation.set(arvCorners[1].x - chunk.vTopLeft.x, arvCorners[1].y - chunk.vTopLeft.y);
+                if (chunk.arsprNPO[(int) vNewLocation.y][(int) vNewLocation.x] != null) return false;
+            } catch (Exception e) {
+                return false;
+            }
+            if (arvCorners[0].y % 1 > fSpeed) {
+                try {
+                    chunk = map.addChunk(arvCorners[2]);  //BL
+                    vNewLocation.set(arvCorners[2].x - chunk.vTopLeft.x, arvCorners[2].y - chunk.vTopLeft.y);
+                    if (chunk.arsprNPO[(int) vNewLocation.y][(int) vNewLocation.x] != null) return false;
+                } catch (Exception e) {
+                    return false;
+                }
+                try {
+                    chunk = map.addChunk(arvCorners[3]);  //BR
+                    vNewLocation.set(arvCorners[3].x - chunk.vTopLeft.x, arvCorners[3].y - chunk.vTopLeft.y);
+                    if (chunk.arsprNPO[(int) vNewLocation.y][(int) vNewLocation.x] != null) return false;
+                } catch (Exception e) {
+                    return false;
+                }
+            }
+        } else if (arvCorners[0].y % 1 > fSpeed) {
+            try {
+                chunk = map.addChunk(arvCorners[2]);  //BL
+                vNewLocation.set(arvCorners[2].x - chunk.vTopLeft.x, arvCorners[2].y - chunk.vTopLeft.y);
+                if (chunk.arsprNPO[(int) vNewLocation.y][(int) vNewLocation.x] != null) return false;
+            } catch (Exception e) {
+                return false;
+            }
+        }
+        /*/ //BEFORE
         for (int i = 0; i < arvCorners.length; i++) {
+            System.out.println(i + "\t" + arvCorners[i]);
             try {
                 Chunk chunk = map.addChunk(arvCorners[i]);
                 vNewLocation.set(arvCorners[i].x - chunk.vTopLeft.x, arvCorners[i].y - chunk.vTopLeft.y);
-                System.out.println(i + "\t" + arvCorners[i]);
                 if (chunk.arsprNPO[(int) vNewLocation.y][(int) vNewLocation.x] != null) {
                     return false;
                 }
             } catch (Exception e) {
             }
         }
+        //*/
         return true;
     }
 

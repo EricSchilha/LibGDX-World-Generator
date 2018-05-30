@@ -82,27 +82,27 @@ public class CollisionDetectionScratch extends PApplet {
         }
 
 
-        //TODO: improve this code
+        //TODO: improve this code (try-catch's are supposedly quite slow)
         boolean canMove(Direction direction) {
             try {
                 double dNewX = dX, dNewY = dY;
                 if (direction == Direction.NORTH || direction == Direction.SOUTH) {
-                    dNewY += arnKeys[0] * dSpeed / 2;
+                    dNewY += arnKeys[0] * dSpeed;
                 } else if (direction == Direction.EAST || direction == Direction.WEST) {
-                    dNewX += arnKeys[1] * dSpeed / 2;
+                    dNewX += arnKeys[1] * dSpeed;
                 }
                 int nTileX, nTileY;
                 nTileX = (int) dNewX;
                 nTileY = (int) dNewY;
                 System.out.println(dNewX + "\t" + dNewY);
                 if (arObjects[nTileY][nTileX]) return false;
-                if (dNewX % 1 > dSpeed / 2) {
+                if (dNewX % 1 > dSpeed) {
                     try {
                         if (arObjects[nTileY][nTileX + 1]) return false;
                     } catch (Exception e) {
                         return false;
                     }
-                    if (dNewY % 1 > dSpeed / 2) {
+                    if (dNewY % 1 > dSpeed) {
                         try {
                             if (arObjects[nTileY + 1][nTileX]) return false;
                         } catch (Exception e) {
@@ -114,7 +114,7 @@ public class CollisionDetectionScratch extends PApplet {
                             return false;
                         }
                     }
-                } else if (dNewY % 1 > dSpeed / 2) {
+                } else if (dNewY % 1 > dSpeed) {
                     try {
                         if (arObjects[nTileY + 1][nTileX]) return false;
                     } catch (Exception e) {

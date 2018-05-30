@@ -20,20 +20,11 @@ public class Map {
         for (int y = 0; y < arChunks.length; y++)
             for (int x = 0; x < arChunks[y].length; x++)
                 arChunks[y][x] = addChunk(new Vector2(Chunk.CHUNK_SIZE * (x - ((arChunks[y].length - 1) / 2)), Chunk.CHUNK_SIZE * (y - ((arChunks.length - 1) / 2))));
-        Vector2 vPlayerChunk = getChunkIndices(sprPlayer.getLocation());
-        if (arChunks[arChunks[arChunks.length / 2].length / 2][arChunks.length / 2].vTopLeft.x != vPlayerChunk.x || arChunks[arChunks[arChunks.length / 2].length / 2][arChunks.length / 2].vTopLeft.y != vPlayerChunk.y) {
-            int nPlayerChunkX = (int) vPlayerChunk.x;
-            int nPlayerChunkY = (int) vPlayerChunk.y;
-            for (int y = 0; y < arChunks.length; y++)
-                for (int x = 0; x < arChunks[y].length; x++)
-                    arChunks[y][x] = addChunk(new Vector2(nPlayerChunkX - Chunk.CHUNK_SIZE * (x - ((arChunks[y].length - 1) / 2)), nPlayerChunkY - Chunk.CHUNK_SIZE * (y - ((arChunks.length - 1) / 2))));
-        }
-
     }
 
 
     public void update() {
-        /*
+        //*
         Vector2 vPlayerChunk = getChunkIndices(sprPlayer.getLocation());
         if (arChunks[arChunks[arChunks.length / 2].length / 2][arChunks.length / 2].vTopLeft.x != vPlayerChunk.x || arChunks[arChunks[arChunks.length / 2].length / 2][arChunks.length / 2].vTopLeft.y != vPlayerChunk.y) {
             int nPlayerChunkX = (int) vPlayerChunk.x;
