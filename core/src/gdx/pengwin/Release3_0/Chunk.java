@@ -9,17 +9,18 @@ import java.util.Random;
 public class Chunk {
     public static /*final*/ int CHUNK_SIZE = 32;
 
+    private Map map;
     Random randNPO;
     public SprNPO[][] arsprNPO; //Stores the other things on the map (trees, rocks, etc.)
     public SprTile[][] arsprTiles;
-    public static Noise noise = new Noise();
     Vector2 vTopLeft;
 
-    public Chunk(Vector2 vTopLeft) {
+    public Chunk(Vector2 vTopLeft, Map map) {
+        this.map = map;
         this.arsprTiles = new SprTile[CHUNK_SIZE][CHUNK_SIZE];
         this.arsprNPO = new SprNPO[CHUNK_SIZE][CHUNK_SIZE];
         this.vTopLeft = vTopLeft;
-        randNPO = new Random((int) noise.noise((int) this.vTopLeft.x, (int) this.vTopLeft.y) * 10000);
+        randNPO = new Random((int) map.noise.noise((int) this.vTopLeft.x, (int) this.vTopLeft.y) * 10000);
         generateMap();
     }
 
@@ -30,7 +31,7 @@ public class Chunk {
         for (int y = 0; y < arsprTiles.length; y++) {
             for (int x = 0; x < arsprTiles[y].length; x++) {
                 arsprTiles[y][x] = new SprTile(TileType.Grass);
-                double dNoiseVal = noise.noise(vTopLeft.x * fPersistence + fWidthOffset, vTopLeft.y * fPersistence + fHeightOffset);
+                double dNoiseVal = map.noise.noise(vTopLeft.x * fPersistence + fWidthOffset, vTopLeft.y * fPersistence + fHeightOffset);
                 fWidthOffset += fPersistence;
                 arsprTiles[y][x] = (dNoiseVal < 0.35) ? new SprTile(TileType.Water) : (dNoiseVal < 0.65 ? new SprTile(TileType.Grass) : new SprTile(TileType.Mountain));
                 if (x % 2 == 0 && y % 2 == 0) {

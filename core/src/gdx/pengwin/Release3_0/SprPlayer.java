@@ -14,21 +14,18 @@ import java.util.Arrays;
 public class SprPlayer extends Sprite {
     private Vector2 vLocation, vNewLocation, vNewNewLocation;
     public int nPixelX = SprTile.TILE_SIZE * 8, nPixelY = SprTile.TILE_SIZE * 8 + SprTile.TILE_SIZE;
-    private int nMinDivisor = 4096;
-    private float fSpeed = (float) 0.1;
+    private float fSpeed = (float) 0.1, fPlayerSizeInTiles = (float) 1;
     public static Texture txPlayer = new Texture(Gdx.files.internal("Dude1.png"));
     public int[] arnKeys = {0, 0, 0, 0};
     int nVertMovement = 0, nHoriMovement = 0;
     Vector2[] arvCorners = new Vector2[4];
 
-    public SprPlayer() {
+    public SprPlayer(Vector2 vLocation) {
         super(txPlayer);
-        setSize(SprTile.TILE_SIZE, -SprTile.TILE_SIZE);
-        this.vLocation = new Vector2(
-                (int) (Math.random() * Integer.MAX_VALUE / nMinDivisor + Integer.MAX_VALUE / nMinDivisor / 2) + (float)0.0001,
-                (int) (Math.random() * Integer.MAX_VALUE / nMinDivisor + Integer.MAX_VALUE / nMinDivisor / 2) + (float)0.0001);
-        this.vNewLocation = new Vector2();
-        this.vNewNewLocation = new Vector2();
+        setSize(SprTile.TILE_SIZE * fPlayerSizeInTiles, -SprTile.TILE_SIZE * fPlayerSizeInTiles);
+        this.vLocation = vLocation.cpy();
+        this.vNewLocation = vLocation.cpy();
+        this.vNewNewLocation = vLocation.cpy();
     }
 
     public void draw(SpriteBatch batch, ShapeRenderer sr) {
@@ -58,13 +55,13 @@ public class SprPlayer extends Sprite {
         }
 
         //Reordered array to make it easier to use (0 is Top Left)
-        vNewNewLocation.set(vNewLocation);                                  //Bottom Left
+        vNewNewLocation.set(vNewLocation);                                                                              //Bottom Left
         arvCorners[2] = vNewLocation.cpy();
-        vNewLocation.set(vNewNewLocation.x, vNewNewLocation.y - 1);         //Top Left
+        vNewLocation.set(vNewNewLocation.x, vNewNewLocation.y - fPlayerSizeInTiles);                                    //Top Left
         arvCorners[0] = vNewLocation.cpy();
-        vNewLocation.set(vNewNewLocation.x + 1, vNewNewLocation.y - 1);     //Top Right
+        vNewLocation.set(vNewNewLocation.x + fPlayerSizeInTiles, vNewNewLocation.y - fPlayerSizeInTiles);               //Top Right
         arvCorners[1] = vNewLocation.cpy();
-        vNewLocation.set(vNewNewLocation.x + 1, vNewNewLocation.y);         //Bottom Right
+        vNewLocation.set(vNewNewLocation.x + fPlayerSizeInTiles, vNewNewLocation.y);                                    //Bottom Right
         arvCorners[3] = vNewLocation.cpy();
 
         //*
@@ -73,23 +70,27 @@ public class SprPlayer extends Sprite {
         if (chunk.arsprNPO[(int) vNewLocation.y][(int) vNewLocation.x] != null) return false;
         if (chunk.arsprTiles[(int) vNewLocation.y][(int) vNewLocation.x].tileType == TileType.Mountain) return false;
         if (chunk.arsprTiles[(int) vNewLocation.y][(int) vNewLocation.x].tileType == TileType.Water) return false;
-        if (arvCorners[0].x % 1 > fSpeed) {
+        if (arvCorners[0].x % 1 > fSpeed + (1 - fPlayerSizeInTiles)) {
             try {
                 chunk = map.addChunk(arvCorners[1]);  //TR
                 vNewLocation.set(arvCorners[1].x - chunk.vTopLeft.x, arvCorners[1].y - chunk.vTopLeft.y);
                 if (chunk.arsprNPO[(int) vNewLocation.y][(int) vNewLocation.x] != null) return false;
-                if (chunk.arsprTiles[(int) vNewLocation.y][(int) vNewLocation.x].tileType == TileType.Mountain) return false;
-                if (chunk.arsprTiles[(int) vNewLocation.y][(int) vNewLocation.x].tileType == TileType.Water) return false;
+                if (chunk.arsprTiles[(int) vNewLocation.y][(int) vNewLocation.x].tileType == TileType.Mountain)
+                    return false;
+                if (chunk.arsprTiles[(int) vNewLocation.y][(int) vNewLocation.x].tileType == TileType.Water)
+                    return false;
             } catch (Exception e) {
                 return false;
             }
-            if (arvCorners[0].y % 1 > fSpeed) {
+            if (arvCorners[0].y % 1 > fSpeed + (1 - fPlayerSizeInTiles)) {
                 try {
                     chunk = map.addChunk(arvCorners[2]);  //BL
                     vNewLocation.set(arvCorners[2].x - chunk.vTopLeft.x, arvCorners[2].y - chunk.vTopLeft.y);
                     if (chunk.arsprNPO[(int) vNewLocation.y][(int) vNewLocation.x] != null) return false;
-                    if (chunk.arsprTiles[(int) vNewLocation.y][(int) vNewLocation.x].tileType == TileType.Mountain) return false;
-                    if (chunk.arsprTiles[(int) vNewLocation.y][(int) vNewLocation.x].tileType == TileType.Water) return false;
+                    if (chunk.arsprTiles[(int) vNewLocation.y][(int) vNewLocation.x].tileType == TileType.Mountain)
+                        return false;
+                    if (chunk.arsprTiles[(int) vNewLocation.y][(int) vNewLocation.x].tileType == TileType.Water)
+                        return false;
                 } catch (Exception e) {
                     return false;
                 }
@@ -97,19 +98,23 @@ public class SprPlayer extends Sprite {
                     chunk = map.addChunk(arvCorners[3]);  //BR
                     vNewLocation.set(arvCorners[3].x - chunk.vTopLeft.x, arvCorners[3].y - chunk.vTopLeft.y);
                     if (chunk.arsprNPO[(int) vNewLocation.y][(int) vNewLocation.x] != null) return false;
-                    if (chunk.arsprTiles[(int) vNewLocation.y][(int) vNewLocation.x].tileType == TileType.Mountain) return false;
-                    if (chunk.arsprTiles[(int) vNewLocation.y][(int) vNewLocation.x].tileType == TileType.Water) return false;
+                    if (chunk.arsprTiles[(int) vNewLocation.y][(int) vNewLocation.x].tileType == TileType.Mountain)
+                        return false;
+                    if (chunk.arsprTiles[(int) vNewLocation.y][(int) vNewLocation.x].tileType == TileType.Water)
+                        return false;
                 } catch (Exception e) {
                     return false;
                 }
             }
-        } else if (arvCorners[0].y % 1 > fSpeed) {
+        } else if (arvCorners[0].y % 1 > fSpeed + (1 - fPlayerSizeInTiles)) {
             try {
                 chunk = map.addChunk(arvCorners[2]);  //BL
                 vNewLocation.set(arvCorners[2].x - chunk.vTopLeft.x, arvCorners[2].y - chunk.vTopLeft.y);
                 if (chunk.arsprNPO[(int) vNewLocation.y][(int) vNewLocation.x] != null) return false;
-                if (chunk.arsprTiles[(int) vNewLocation.y][(int) vNewLocation.x].tileType == TileType.Mountain) return false;
-                if (chunk.arsprTiles[(int) vNewLocation.y][(int) vNewLocation.x].tileType == TileType.Water) return false;
+                if (chunk.arsprTiles[(int) vNewLocation.y][(int) vNewLocation.x].tileType == TileType.Mountain)
+                    return false;
+                if (chunk.arsprTiles[(int) vNewLocation.y][(int) vNewLocation.x].tileType == TileType.Water)
+                    return false;
             } catch (Exception e) {
                 return false;
             }

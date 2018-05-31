@@ -10,21 +10,22 @@ public class ScrGame extends GameScreen {
     protected static ScreenType screenType = ScreenType.Game;
     protected static Texture txButtonUp = new Texture(Gdx.files.internal("GameButtonUp.png"));
     protected static Texture txButtonDown = new Texture(Gdx.files.internal("GameButtonDown.png"));
+    protected static int nSeed;
     protected Map map;
     boolean showButtons = false;
 
     public ScrGame(GamMain gamMain) { //TODO: move the code from here into GameScreen constructor (maybe)
         this.gamMain = gamMain;
+        this.nSeed = (int)(Math.random()* 100000000);
         super.screenType = this.screenType;
         super.txButtonUp = this.txButtonUp;
         super.txButtonDown = this.txButtonDown;
-        map = new Map(0);
+        map = new Map(nSeed);
 
     }
 
     @Override
     public void show() {
-        map = new Map(0);
         super.show();
     }
 

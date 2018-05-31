@@ -37,7 +37,7 @@ public class CollisionDetectionV2Scratch extends PApplet {
         }
         fill(0, 0, 255, 200);
         noStroke();
-        rect(player.vLocation.x * TILE_SIZE, player.vLocation.y * TILE_SIZE, TILE_SIZE, TILE_SIZE);
+        rect(player.vLocation.x * TILE_SIZE, player.vLocation.y * TILE_SIZE, TILE_SIZE * player.fPlayerSizeInTiles, TILE_SIZE * player.fPlayerSizeInTiles);
         stroke(1);
         player.move();
     }
@@ -67,7 +67,7 @@ public class CollisionDetectionV2Scratch extends PApplet {
     class Player {
         PVector vLocation, vNewLocation;
         PVector vTopLeft, vTopRight, vBottomLeft, vBottomRight;
-        float fSpeed = (float) 0.1;
+        float fSpeed = (float) 0.1, fPlayerSizeInTiles = (float) 0.7;
 
         public Player(int nW, int nH) {
             vLocation = new PVector((int) random(nW / 2 - nW / 4, nW / 2 + nW / 4) + (float) 0.0001,
@@ -110,20 +110,20 @@ public class CollisionDetectionV2Scratch extends PApplet {
             }
             vTopLeft = vNewLocation.copy();
             vTopRight = vNewLocation.copy();
-            vTopRight.set(vNewLocation.x + 1, vNewLocation.y);
+            vTopRight.set(vNewLocation.x + fPlayerSizeInTiles, vNewLocation.y);
             vBottomLeft = vNewLocation.copy();
-            vBottomLeft.set(vNewLocation.x, vNewLocation.y + 1);
+            vBottomLeft.set(vNewLocation.x, vNewLocation.y + fPlayerSizeInTiles);
             vBottomRight = vNewLocation.copy();
-            vBottomRight.set(vNewLocation.x + 1, vNewLocation.y + 1);
+            vBottomRight.set(vNewLocation.x + fPlayerSizeInTiles, vNewLocation.y + fPlayerSizeInTiles);
 
             if (arObjects[(int) vTopLeft.y][(int) vTopLeft.x]) return false;
-            if (vTopLeft.x % 1 > fSpeed) {
+            if (vTopLeft.x % 1 > fSpeed + (1 - fPlayerSizeInTiles)) {
                 try {
                     if (arObjects[(int) vTopRight.y][(int) vTopRight.x]) return false;
                 } catch (Exception e) {
                     return false;
                 }
-                if (vTopLeft.y % 1 > fSpeed) {
+                if (vTopLeft.y % 1 > fSpeed + (1 - fPlayerSizeInTiles)) {
                     try {
                         if (arObjects[(int) vBottomLeft.y][(int) vBottomLeft.x]) return false;
                     } catch (Exception e) {
@@ -135,7 +135,7 @@ public class CollisionDetectionV2Scratch extends PApplet {
                         return false;
                     }
                 }
-            } else if (vTopLeft.y % 1 > fSpeed) {
+            } else if (vTopLeft.y % 1 > fSpeed + (1 - fPlayerSizeInTiles)) {
                 try {
                     if (arObjects[(int) vBottomLeft.y][(int) vBottomLeft.x]) return false;
                 } catch (Exception e) {

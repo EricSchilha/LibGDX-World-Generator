@@ -5,21 +5,35 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 public class Map {
+    public Noise noise;
     public Chunk[][] arChunks = new Chunk[3][3];
     public int nSeed;
-    public SprPlayer sprPlayer = new SprPlayer();
+    public SprPlayer sprPlayer;
+    private int nMinDivisor = 4096;
+    private Vector2 vSpawnLocation;
+    private Random random;
 
     public Map(int nSeed) {
         this.nSeed = nSeed;
+        this.noise = new Noise(this.nSeed);
+        this.random = new Random(this.nSeed);
         this.init();
     }
 
     private void init() {
+        vSpawnLocation = new Vector2(
+                (int) (random.nextFloat() * Integer.MAX_VALUE / nMinDivisor + Integer.MAX_VALUE / nMinDivisor / 2) + (float)0.0001,
+                (int) (random.nextFloat() * Integer.MAX_VALUE / nMinDivisor + Integer.MAX_VALUE / nMinDivisor / 2) + (float)0.0001);    //getChunkIndices not needed, already does it in addChunk()
+        Vector2 vSpawnLocation2 = vSpawnLocation.cpy();
         for (int y = 0; y < arChunks.length; y++)
-            for (int x = 0; x < arChunks[y].length; x++)
-                arChunks[y][x] = addChunk(new Vector2(Chunk.CHUNK_SIZE * (x - ((arChunks[y].length - 1) / 2)), Chunk.CHUNK_SIZE * (y - ((arChunks.length - 1) / 2))));
+            for (int x = 0; x < arChunks[y].length; x++) {
+                vSpawnLocation2.set(vSpawnLocation.x - Chunk.CHUNK_SIZE * (1 - x), vSpawnLocation.y + Chunk.CHUNK_SIZE * (y - ((arChunks.length - 1) / 2)));
+                arChunks[y][x] = addChunk(vSpawnLocation2);
+            }
+        this.sprPlayer = new SprPlayer(vSpawnLocation);
     }
 
 
@@ -55,7 +69,7 @@ public class Map {
                         return chunk;
             }
         }
-        return new Chunk(vTopLeft);
+        return new Chunk(vTopLeft, this);
     }
 
     /*public ArrayList<Chunk> addChunks(ArrayList<Vector2> alvTopLefts) {

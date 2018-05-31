@@ -31,6 +31,12 @@ public class Noise {
     Random perlinRandom;
     protected static final float[] cosLUT = new float[720];
 
+    int seed;
+
+    public Noise(int seed) {
+        this.seed = seed;
+    }
+
     static {
         for (int i = 0; i < 720; ++i) {
             cosLUT[i] = (float) Math.cos((double) ((float) i * 0.017453292F * 0.5F));
@@ -50,7 +56,7 @@ public class Noise {
         int xi;
         if (this.perlin == null) {
             if (this.perlinRandom == null) {
-                this.perlinRandom = new Random();
+                this.perlinRandom = new Random(this.seed);
             }
 
             this.perlin = new float[4096];
