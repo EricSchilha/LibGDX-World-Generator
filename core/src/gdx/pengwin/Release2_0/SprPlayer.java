@@ -2,8 +2,10 @@ package gdx.pengwin.Release2_0;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
 
@@ -14,25 +16,51 @@ import java.util.Arrays;
 public class SprPlayer extends Sprite {
     private Vector2 vLocation, vNewLocation, vNewNewLocation;
     public int nPixelX = SprTile.TILE_SIZE * 8, nPixelY = SprTile.TILE_SIZE * 8 + SprTile.TILE_SIZE;
-    private int nMinDivisor = 4096;
+    private int nMinDivisor = 4096, nRows = 2, nColumns = 8, nCurFrame;
     private float fSpeed = (float) 0.1;
-    public static Texture txPlayer = new Texture(Gdx.files.internal("Dude1.png"));
+    public static Texture txPlayerSprite = new Texture(Gdx.files.internal("PlayerSprite.png"));
+    private Animation<TextureRegion> araniSprite[];
+
     public int[] arnKeys = {0, 0, 0, 0};
     int nVertMovement = 0, nHoriMovement = 0;
     Vector2[] arvCorners = new Vector2[4];
 
     public SprPlayer() {
-        super(txPlayer);
         setSize(SprTile.TILE_SIZE, -SprTile.TILE_SIZE);
+        this.create();
+    }
+
+    public SprPlayer(int nRows, int nColumns) {
+        setSize(SprTile.TILE_SIZE, -SprTile.TILE_SIZE);
+        this.nRows = nRows;
+        this.nColumns = nColumns;
+        this.create();
+    }
+
+    public void create() {
         this.vLocation = new Vector2(
                 (int) (Math.random() * Integer.MAX_VALUE / nMinDivisor + Integer.MAX_VALUE / nMinDivisor / 2) + (float)0.0001,
                 (int) (Math.random() * Integer.MAX_VALUE / nMinDivisor + Integer.MAX_VALUE / nMinDivisor / 2) + (float)0.0001);
         this.vNewLocation = new Vector2();
         this.vNewNewLocation = new Vector2();
+
+        Sprite[] arSprSprite = new Sprite[8];
+        araniSprite = new Animation[2];
+        nCurFrame = 0;
+        for (int i = 0; i < nRows; i++) {
+            for (int j = 0; j < nColumns; j++) {
+                arSprSprite[j] = new Sprite(txPlayerSprite,
+                        j * txPlayerSprite.getWidth() / nColumns,  i * txPlayerSprite.getHeight() / nRows,
+                        txPlayerSprite.getWidth() / nColumns, txPlayerSprite.getHeight() / nRows);
+            }
+            araniSprite[i] = new Animation<TextureRegion>(1, arSprSprite);
+            arSprSprite = new Sprite[8];
+        }
     }
 
     public void draw(SpriteBatch batch, ShapeRenderer sr) {
         setPosition(nPixelX, nPixelY);
+        setRegion(araniSprite[0].getKeyFrame(0, true));
         super.draw(batch);
     }
 
