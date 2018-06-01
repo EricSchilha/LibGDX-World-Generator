@@ -2,8 +2,10 @@ package gdx.pengwin.Release3_0;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
 
@@ -12,36 +14,66 @@ import java.util.Arrays;
 
 
 public class SprPlayer extends Sprite {
-    private Vector2 vLocation, vNewLocation, vNewNewLocation;
     public int nPixelX = SprTile.TILE_SIZE * 8, nPixelY = SprTile.TILE_SIZE * 8 + SprTile.TILE_SIZE;
-    private float fSpeed = (float) 0.1, fPlayerSizeInTiles = (float) 1;
-    public static Texture txPlayer = new Texture(Gdx.files.internal("Dude1.png"));
     public int[] arnKeys = {0, 0, 0, 0};
-    int nVertMovement = 0, nHoriMovement = 0;
-    Vector2[] arvCorners = new Vector2[4];
+
+    private Animation<TextureRegion>[] araniPlayer;
+    private Vector2 vLocation, vNewLocation, vNewNewLocation;
+    private Vector2[] arvCorners;
+    private int nVertMovement = 0, nHoriMovement = 0, nRows = 2, nColumns = 9;
+    private float fSpeed = 0.05f, fPlayerSizeInTiles = 1.0f,  fAniSpeed = 5.2f;
+    int nFrame = 0, nPos = 0;
 
     public SprPlayer(Vector2 vLocation) {
-        super(txPlayer);
-        setSize(SprTile.TILE_SIZE * fPlayerSizeInTiles, -SprTile.TILE_SIZE * fPlayerSizeInTiles);
+        this.create(vLocation);
+    }
+
+    public void create(Vector2 vLocation) {
+        this.arvCorners = new Vector2[4];
         this.vLocation = vLocation.cpy();
         this.vNewLocation = vLocation.cpy();
         this.vNewNewLocation = vLocation.cpy();
+        this.araniPlayer = new Animation[2];
+
+        Texture txPlayerSprite = new Texture(Gdx.files.internal("PlayerSprite.png"));
+        TextureRegion[][] artrFull = TextureRegion.split(txPlayerSprite,
+                        txPlayerSprite.getWidth() / nColumns, txPlayerSprite.getHeight() / nRows);
+        Sprite[] artrFrames = new Sprite[nColumns];
+        for (int i = 0; i < nRows; i++) {
+            for (int j = 0; j < nColumns; j++) {
+                artrFrames[j] = new Sprite(artrFull[i][j]);
+            }
+            araniPlayer[i] = new Animation<TextureRegion>(fAniSpeed, artrFrames);
+            artrFrames = new Sprite[nColumns];
+        }
     }
 
     public void draw(SpriteBatch batch, ShapeRenderer sr) {
         setPosition(nPixelX, nPixelY);
+        setRegion(araniPlayer[nPos].getKeyFrame(nFrame, true));
+        setSize(SprTile.TILE_SIZE * fPlayerSizeInTiles, -SprTile.TILE_SIZE * fPlayerSizeInTiles);
         super.draw(batch);
     }
 
     public void move(Map map) {
         nVertMovement = arnKeys[1] - arnKeys[0];
         nHoriMovement = arnKeys[3] - arnKeys[2];
+        if(nVertMovement == 0 && nHoriMovement == 0) {
+            if(nPos == 0) {
+                nFrame = 0;
+            } else {
+                nFrame = 45; //I stole the sprites from Thomas and he said 45 worked so I'm sticking with it
+            }
+            return;
+        }
+        nPos = (nHoriMovement == -1) ? 1 : (nHoriMovement == 1) ? 0 : nPos;
         if (nHoriMovement == -1 && canMove(Direction.WEST, map) || nHoriMovement == 1 && canMove(Direction.EAST, map)) {
             setLocation(new Vector2(vLocation.x + (nHoriMovement * fSpeed), vLocation.y));
         }
         if (nVertMovement == -1 && canMove(Direction.NORTH, map) || nVertMovement == 1 && canMove(Direction.SOUTH, map)) {
             setLocation(new Vector2(vLocation.x, vLocation.y + (nVertMovement * fSpeed)));
         }
+        nFrame++;
     }
 
     //TODO: improve this code (try-catch's are supposedly quite slow)

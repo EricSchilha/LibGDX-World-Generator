@@ -59,7 +59,7 @@ public class Chunk {
                 if (arsprTiles[y][x].TILE_SIZE * (vTopLeft.x - player.getLocation().x + x + 1) + player.nPixelX > 0 && arsprTiles[y][x].TILE_SIZE * (vTopLeft.x - player.getLocation().x + x) + player.nPixelX < Gdx.graphics.getWidth() && arsprTiles[y][x].TILE_SIZE * (vTopLeft.y - player.getLocation().y + y + 1) + player.nPixelY > 0 && arsprTiles[y][x].TILE_SIZE * (vTopLeft.y - player.getLocation().y + y) + player.nPixelY < Gdx.graphics.getHeight()) {
                     arsprTiles[y][x].draw(batch, arsprTiles[y][x].TILE_SIZE * (vTopLeft.x - player.getLocation().x + x) + player.nPixelX, arsprTiles[y][x].TILE_SIZE * (vTopLeft.y - player.getLocation().y + y) + player.nPixelY);
                     if (arsprNPO[y][x] != null) {
-                        arsprNPO[y][x].draw(batch, arsprNPO[y][x].OBJECT_WIDTH * (vTopLeft.x - player.getLocation().x + x) + player.nPixelX, arsprNPO[y][x].OBJECT_HEIGHT * (vTopLeft.y - player.getLocation().y + y) + player.nPixelY);
+                        arsprNPO[y][x].draw(batch, arsprNPO[y][x].OBJECT_WIDTH * (vTopLeft.x - player.getLocation().x + x) + player.nPixelX, arsprNPO[y][x].OBJECT_WIDTH * (vTopLeft.y - player.getLocation().y + y) + player.nPixelY);
                     }
                 }
             }

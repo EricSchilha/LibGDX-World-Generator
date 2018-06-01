@@ -8,7 +8,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import java.util.HashMap;
 
 public class SprTile extends Sprite {
-    public static int TILE_SIZE = (Gdx.graphics.getWidth() + Gdx.graphics.getHeight()) / Chunk.CHUNK_SIZE; //In pixels
+    public static int TILE_SIZE = (Gdx.graphics.getWidth() + Gdx.graphics.getHeight()) / (Chunk.CHUNK_SIZE)/* - Chunk.CHUNK_SIZE / 2)*/; //In pixels
     /*public static HashMap<TileType, Texture> txmTile = new HashMap<TileType, Texture>() {{
         put(TileType.Water, new Texture(Gdx.files.internal("WaterTile.png")));
         put(TileType.Grass, new Texture(Gdx.files.internal("GrassTile1.png"));
