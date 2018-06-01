@@ -6,15 +6,11 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
-
-import java.util.ArrayList;
-import java.util.Arrays;
 
 
 public class SprPlayer extends Sprite {
-    public int nPixelX = SprTile.TILE_SIZE * 8, nPixelY = SprTile.TILE_SIZE * 8 + SprTile.TILE_SIZE;
+    public int nPixelX = (Gdx.graphics.getWidth() - SprTile.TILE_SIZE) / 2, nPixelY = (Gdx.graphics.getHeight() + SprTile.TILE_SIZE) / 2;
     public int[] arnKeys = {0, 0, 0, 0};
 
     private Animation<TextureRegion>[] araniPlayer;
@@ -38,17 +34,17 @@ public class SprPlayer extends Sprite {
         Texture txPlayerSprite = new Texture(Gdx.files.internal("PlayerSprite.png"));
         TextureRegion[][] artrFull = TextureRegion.split(txPlayerSprite,
                         txPlayerSprite.getWidth() / nColumns, txPlayerSprite.getHeight() / nRows);
-        Sprite[] artrFrames = new Sprite[nColumns];
+        Sprite[] arsprFrames = new Sprite[nColumns];
         for (int i = 0; i < nRows; i++) {
             for (int j = 0; j < nColumns; j++) {
-                artrFrames[j] = new Sprite(artrFull[i][j]);
+                arsprFrames[j] = new Sprite(artrFull[i][j]);
             }
-            araniPlayer[i] = new Animation<TextureRegion>(fAniSpeed, artrFrames);
-            artrFrames = new Sprite[nColumns];
+            araniPlayer[i] = new Animation<TextureRegion>(fAniSpeed, arsprFrames);
+            arsprFrames = new Sprite[nColumns];
         }
     }
 
-    public void draw(SpriteBatch batch, ShapeRenderer sr) {
+    public void draw(SpriteBatch batch) {
         setPosition(nPixelX, nPixelY);
         setRegion(araniPlayer[nPos].getKeyFrame(nFrame, true));
         setSize(SprTile.TILE_SIZE * fPlayerSizeInTiles, -SprTile.TILE_SIZE * fPlayerSizeInTiles);

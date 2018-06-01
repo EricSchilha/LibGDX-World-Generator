@@ -1,10 +1,8 @@
 package gdx.pengwin.Release3_0;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
 
-import java.util.ArrayList;
 import java.util.Random;
 
 public class Map {
@@ -51,13 +49,13 @@ public class Map {
         sprPlayer.move(this);
     }
 
-    public void draw(SpriteBatch batch, ShapeRenderer sr) {
+    public void draw(SpriteBatch batch) {
         for (Chunk arChunk[] : arChunks) {
             for (Chunk chunk : arChunk) {
                 chunk.draw(batch, sprPlayer);
             }
         }
-        sprPlayer.draw(batch, sr);
+        sprPlayer.draw(batch);
     }
 
     public Chunk addChunk(Vector2 vTopLeft) {
@@ -71,18 +69,6 @@ public class Map {
         }
         return new Chunk(vTopLeft, this);
     }
-
-    /*public ArrayList<Chunk> addChunks(ArrayList<Vector2> alvTopLefts) {
-        ArrayList<Chunk> alChunks = new ArrayList<Chunk>();
-        VectorLoop: for (Vector2 vTopLeft : alvTopLefts) {
-            for (int i = 0; i < alChunks.size(); i++) {
-                vTopLeft = getChunkIndices(vTopLeft);
-                if (alChunks.get(i).vTopLeft.x == vTopLeft.x && alChunks.get(i).vTopLeft.y == vTopLeft.y) continue VectorLoop;
-            }
-            alChunks.add(addChunk(vTopLeft));
-        }
-        return alChunks;
-    }*/
 
     public Vector2 getChunkIndices(Vector2 vPos) {
         int nX = (int) (vPos.x - (vPos.x % Chunk.CHUNK_SIZE));

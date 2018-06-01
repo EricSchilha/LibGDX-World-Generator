@@ -8,7 +8,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import java.util.HashMap;
 
 public class SprNPO extends Sprite {    //NPO stands for Non-Player Object
-    public static int OBJECT_WIDTH = (Gdx.graphics.getWidth() + Gdx.graphics.getHeight()) / (Chunk.CHUNK_SIZE)/* - Chunk.CHUNK_SIZE / 2)*/; //In pixels
+    public static int OBJECT_WIDTH = SprTile.TILE_SIZE;//(Gdx.graphics.getWidth() + Gdx.graphics.getHeight()) / (Chunk.CHUNK_SIZE)/* - Chunk.CHUNK_SIZE / 2)*/; //In pixels
     //public static int OBJECT_HEIGHT = (Gdx.graphics.getWidth() + Gdx.graphics.getHeight()) / (Chunk.CHUNK_SIZE - Chunk.CHUNK_SIZE / 2); //In pixels
     public static HashMap<NPOType, Texture> txmObject = new HashMap<NPOType, Texture>() {{
         put(NPOType.Tree, new Texture(Gdx.files.internal("Tree2.png")));
