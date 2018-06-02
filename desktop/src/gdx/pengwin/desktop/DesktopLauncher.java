@@ -7,9 +7,10 @@ public class DesktopLauncher {
     public static LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
 
     public static void main (String[] args) {
+        int nScale = 6;
         config.title = "PENGWIN";
-        config.width = 800;
-        config.height = 800;
+        config.width = 160*nScale;
+        config.height = 120*nScale;
         //config.resizable = false;
         new LwjglApplication(new gdx.pengwin.Release3_0.GamMain(), config);
     }

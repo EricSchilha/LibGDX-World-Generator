@@ -8,7 +8,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import java.util.HashMap;
 
 public class SprTile extends Sprite {
-    public static int TILE_SIZE = 40;//(Gdx.graphics.getWidth() + Gdx.graphics.getHeight()) / (Chunk.CHUNK_SIZE)/* - Chunk.CHUNK_SIZE / 2)*/; //In pixels
+    public static int TILE_SIZE = 80;//(Gdx.graphics.getWidth() + Gdx.graphics.getHeight()) / (Chunk.CHUNK_SIZE)/* - Chunk.CHUNK_SIZE / 2)*/; //In pixels
     /*public static HashMap<TileType, Texture> txmTile = new HashMap<TileType, Texture>() {{
         put(TileType.Water, new Texture(Gdx.files.internal("WaterTile.png")));
         put(TileType.Grass, new Texture(Gdx.files.internal("GrassTile1.png"));
@@ -20,7 +20,7 @@ public class SprTile extends Sprite {
             new Texture(Gdx.files.internal("GrassTile2.png")),
             new Texture(Gdx.files.internal("GrassTile3.png")),
     };*/
-    static Texture txGrassTile = new Texture(Gdx.files.internal("GrassTile6.png"));
+    static Texture txGrassTile = new Texture(Gdx.files.internal("GrassTile5.png"));
     static Texture txWaterTile = new Texture(Gdx.files.internal("WaterTile.png"));
     static Texture txMountainTile = new Texture(Gdx.files.internal("MountainTile.png"));
 

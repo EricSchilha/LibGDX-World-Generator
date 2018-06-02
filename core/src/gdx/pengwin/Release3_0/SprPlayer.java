@@ -10,15 +10,22 @@ import com.badlogic.gdx.math.Vector2;
 
 
 public class SprPlayer extends Sprite {
-    public int nPixelX = (Gdx.graphics.getWidth() - SprTile.TILE_SIZE) / 2, nPixelY = (Gdx.graphics.getHeight() + SprTile.TILE_SIZE) / 2;
     public int[] arnKeys = {0, 0, 0, 0};
+    public int nPixelX = (Gdx.graphics.getWidth() - SprTile.TILE_SIZE) / 2;
+    public int nPixelY = (Gdx.graphics.getHeight() + SprTile.TILE_SIZE) / 2;
 
     private Animation<TextureRegion>[] araniPlayer;
     private Vector2 vLocation, vNewLocation, vNewNewLocation;
     private Vector2[] arvCorners;
-    private int nVertMovement = 0, nHoriMovement = 0, nRows = 2, nColumns = 9;
-    private float fSpeed = 0.05f, fPlayerSizeInTiles = 1.0f,  fAniSpeed = 5.2f;
-    int nFrame = 0, nPos = 0;
+    private int nVertMovement = 0, nHoriMovement = 0;
+    private int nRows = 2, nColumns = 9;                                    //NUMBER OF ROWS AND COLUMNS IN SPRITESHEET.
+    private int nFrame = 0, nPos = 0;                                       //USED FOR ANIMATION.
+
+    //MODIFIERS
+    private float fSpeed = 0.05f;                                           //SPEED OF THE PLAYER, IN FRACTIONS OF TILESIZE.
+    private float fPlayerSizeInTiles = 1.0f;                                //NUMBER OF TILES THE PLAYER TAKES UP (DON'T MAKE >1).
+    private float fAniSpeed = 5.2f;                                         //ANIMATION SPEED. SHOULD BE CHANGED WITH SPEED.
+
 
     public SprPlayer(Vector2 vLocation) {
         this.create(vLocation);
@@ -58,7 +65,7 @@ public class SprPlayer extends Sprite {
             if(nPos == 0) {
                 nFrame = 0;
             } else {
-                nFrame = 45; //I stole the sprites from Thomas and he said 45 worked so I'm sticking with it
+                nFrame = 45; //I stole the sprites from Thomas and he said 45 worked so I'm sticking with it.
             }
             return;
         }
@@ -83,11 +90,11 @@ public class SprPlayer extends Sprite {
         }
 
         //Reordered array to make it easier to use (0 is Top Left)
-        vNewNewLocation.set(vNewLocation);                                                                              //Bottom Left
+        vNewNewLocation.set(vNewLocation.x, vNewLocation.y);                                                        //Bottom Left
         arvCorners[2] = vNewLocation.cpy();
-        vNewLocation.set(vNewNewLocation.x, vNewNewLocation.y - fPlayerSizeInTiles);                                    //Top Left
+        vNewLocation.set(vNewNewLocation.x, vNewNewLocation.y - fPlayerSizeInTiles / 2);                                //Top Left
         arvCorners[0] = vNewLocation.cpy();
-        vNewLocation.set(vNewNewLocation.x + fPlayerSizeInTiles, vNewNewLocation.y - fPlayerSizeInTiles);               //Top Right
+        vNewLocation.set(vNewNewLocation.x + fPlayerSizeInTiles, vNewNewLocation.y - fPlayerSizeInTiles / 2);           //Top Right
         arvCorners[1] = vNewLocation.cpy();
         vNewLocation.set(vNewNewLocation.x + fPlayerSizeInTiles, vNewNewLocation.y);                                    //Bottom Right
         arvCorners[3] = vNewLocation.cpy();

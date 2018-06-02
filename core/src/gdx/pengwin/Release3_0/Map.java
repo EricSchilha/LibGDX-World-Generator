@@ -22,15 +22,22 @@ public class Map {
     }
 
     private void init() {
-        vSpawnLocation = new Vector2(
-                (int) (random.nextFloat() * Integer.MAX_VALUE / nMinDivisor + Integer.MAX_VALUE / nMinDivisor / 2) + (float)0.0001,
-                (int) (random.nextFloat() * Integer.MAX_VALUE / nMinDivisor + Integer.MAX_VALUE / nMinDivisor / 2) + (float)0.0001);    //getChunkIndices not needed, already does it in addChunk()
+        vSpawnLocation = new Vector2((int) (random.nextFloat() * Integer.MAX_VALUE / nMinDivisor + Integer.MAX_VALUE / nMinDivisor / 2),
+                (int) (random.nextFloat() * Integer.MAX_VALUE / nMinDivisor + Integer.MAX_VALUE / nMinDivisor / 2));    //getChunkIndices not needed, already does it in addChunk()
         Vector2 vSpawnLocation2 = vSpawnLocation.cpy();
-        for (int y = 0; y < arChunks.length; y++)
+        for (int y = 0; y < arChunks.length; y++) {
             for (int x = 0; x < arChunks[y].length; x++) {
                 vSpawnLocation2.set(vSpawnLocation.x - Chunk.CHUNK_SIZE * (1 - x), vSpawnLocation.y + Chunk.CHUNK_SIZE * (y - ((arChunks.length - 1) / 2)));
                 arChunks[y][x] = addChunk(vSpawnLocation2);
             }
+        }
+        Chunk middleChunk = arChunks[arChunks[arChunks.length / 2].length / 2][arChunks.length / 2];
+        int nTileX, nTileY;
+        do {
+            vSpawnLocation.set(middleChunk.vTopLeft.x + random.nextInt(30) + 1, middleChunk.vTopLeft.y + random.nextInt(30) + 1 - 0.015625001f);//Special number?
+            nTileX = (int) (vSpawnLocation.x - middleChunk.vTopLeft.x);
+            nTileY = (int) (vSpawnLocation.y - middleChunk.vTopLeft.y);
+        } while (middleChunk.arsprNPO[nTileY][nTileX] != null || middleChunk.arsprTiles[nTileY][nTileX].tileType != TileType.Grass);
         this.sprPlayer = new SprPlayer(vSpawnLocation);
     }
 
