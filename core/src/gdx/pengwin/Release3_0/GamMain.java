@@ -18,7 +18,7 @@ public class GamMain extends Game {
                 new ScrMenu(this),
                 new ScrGame(this)
         ));
-        update(alScreens.get(0));
+        update(alScreens.get(1));
     }
 
 

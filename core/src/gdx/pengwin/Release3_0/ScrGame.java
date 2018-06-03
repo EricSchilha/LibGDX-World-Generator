@@ -16,6 +16,8 @@ public class ScrGame extends GameScreen {
     public ScrGame(GamMain gamMain) { //TODO: move the code from here into GameScreen constructor (maybe)
         this.gamMain = gamMain;
         this.nSeed = (int)(Math.random()* 100000000);
+        //Problem Seed: 54530980
+        System.out.println(nSeed);
         super.screenType = this.screenType;
         super.txButtonUp = this.txButtonUp;
         super.txButtonDown = this.txButtonDown;
