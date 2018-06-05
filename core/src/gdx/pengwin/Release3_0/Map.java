@@ -57,9 +57,15 @@ public class Map {
     }
 
     public void draw(SpriteBatch batch) {
-        for (Chunk arChunk[] : arChunks) {
+        /*for (Chunk arChunk[] : arChunks) {
             for (Chunk chunk : arChunk) {
                 chunk.draw(batch, sprPlayer);
+            }
+        }*/
+
+        for(int i = 0; i < arChunks.length; i++) {
+            for(int j = 0; j < arChunks[i].length; j++) {
+                arChunks[arChunks.length - i - 1][arChunks[i].length - j - 1].draw(batch, sprPlayer);
             }
         }
         sprPlayer.draw(batch);

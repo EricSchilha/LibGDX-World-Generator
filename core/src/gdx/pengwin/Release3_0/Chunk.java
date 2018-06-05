@@ -54,10 +54,15 @@ public class Chunk {
     }
 
     public void draw(SpriteBatch batch, SprPlayer player) {
+        boolean playerDrawn = false;
         for (int y = 0; y < arsprTiles.length; y++) {
             for (int x = 0; x < arsprTiles[0].length; x++) {
-                if (arsprTiles[y][x].TILE_SIZE * (vTopLeft.x - player.getLocation().x + x + 1) + player.nPixelX > 0 && arsprTiles[y][x].TILE_SIZE * (vTopLeft.x - player.getLocation().x + x) + player.nPixelX < Gdx.graphics.getWidth() && arsprTiles[y][x].TILE_SIZE * (vTopLeft.y - player.getLocation().y + y + 1) + player.nPixelY > 0 && arsprTiles[y][x].TILE_SIZE * (vTopLeft.y - player.getLocation().y + y) + player.nPixelY < Gdx.graphics.getHeight()) {
+                if (arsprTiles[y][x].TILE_SIZE * (vTopLeft.x - player.getLocation().x + x + 1) + player.nPixelX > 0 && arsprTiles[y][x].TILE_SIZE * (vTopLeft.x - player.getLocation().x + x) + player.nPixelX < Gdx.graphics.getWidth() && arsprTiles[y][x].TILE_SIZE * (vTopLeft.y - player.getLocation().y + y + 1) + player.nPixelY > 0 && arsprTiles[y][x].TILE_SIZE * (vTopLeft.y - player.getLocation().y + y - 1) + player.nPixelY < Gdx.graphics.getHeight()) {
                     arsprTiles[y][x].draw(batch, arsprTiles[y][x].TILE_SIZE * (vTopLeft.x - player.getLocation().x + x) + player.nPixelX, arsprTiles[y][x].TILE_SIZE * (vTopLeft.y - player.getLocation().y + y) + player.nPixelY);
+                    if(!playerDrawn && arsprTiles[y][x].TILE_SIZE * (vTopLeft.y - player.getLocation().y + y) + player.nPixelY >= player.nPixelY) {
+                        player.draw(batch);
+                        playerDrawn = true;
+                    }
                     if (arsprNPO[y][x] != null) {
                         arsprNPO[y][x].draw(batch, arsprNPO[y][x].OBJECT_WIDTH * (vTopLeft.x - player.getLocation().x + x) + player.nPixelX, arsprNPO[y][x].OBJECT_WIDTH * (vTopLeft.y - player.getLocation().y + y) + player.nPixelY);
                     }
