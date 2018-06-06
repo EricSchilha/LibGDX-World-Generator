@@ -13,6 +13,7 @@ public class SprPlayer extends Sprite {
     public int[] arnKeys = {0, 0, 0, 0};
     public int nPixelX = (Gdx.graphics.getWidth() - SprTile.TILE_SIZE) / 2;
     public int nPixelY = (Gdx.graphics.getHeight() + SprTile.TILE_SIZE) / 2;
+    public boolean inWater = false;
 
     private Animation<TextureRegion>[] araniPlayer;
     private Vector2 vLocation, vNewLocation, vNewNewLocation;
@@ -71,16 +72,17 @@ public class SprPlayer extends Sprite {
         }
         nPos = (nHoriMovement == -1) ? 1 : (nHoriMovement == 1) ? 0 : nPos;
         if (nHoriMovement == -1 && canMove(Direction.WEST, map) || nHoriMovement == 1 && canMove(Direction.EAST, map)) {
-            setLocation(new Vector2(vLocation.x + (nHoriMovement * fSpeed), vLocation.y));
+            setLocation(new Vector2(vLocation.x + (nHoriMovement * ((!inWater) ? fSpeed : fSpeed / 2)), vLocation.y));
         }
         if (nVertMovement == -1 && canMove(Direction.NORTH, map) || nVertMovement == 1 && canMove(Direction.SOUTH, map)) {
-            setLocation(new Vector2(vLocation.x, vLocation.y + (nVertMovement * fSpeed)));
+            setLocation(new Vector2(vLocation.x, vLocation.y + (nVertMovement * ((!inWater) ? fSpeed : fSpeed / 2))));
         }
         nFrame++;
     }
 
     //TODO: improve this code (try-catch's are supposedly quite slow)
     boolean canMove(Direction direction, Map map) {
+        inWater = false;
         vNewLocation.set(vLocation);
         if (direction == Direction.EAST || direction == Direction.WEST) {
             vNewLocation.x += nHoriMovement * fSpeed;
@@ -104,7 +106,9 @@ public class SprPlayer extends Sprite {
         vNewLocation.set(arvCorners[0].x - chunk.vTopLeft.x, arvCorners[0].y - chunk.vTopLeft.y);
         if (chunk.arsprNPO[(int) vNewLocation.y][(int) vNewLocation.x] != null) return false;
         if (chunk.arsprTiles[(int) vNewLocation.y][(int) vNewLocation.x].tileType == TileType.Mountain) return false;
-        if (chunk.arsprTiles[(int) vNewLocation.y][(int) vNewLocation.x].tileType == TileType.Water) return false;
+        if (chunk.arsprTiles[(int) vNewLocation.y][(int) vNewLocation.x].tileType == TileType.Water) {
+            inWater = true;
+        }
         if (arvCorners[0].x % 1 > fSpeed + (1 - fPlayerSizeInTiles)) {
             try {
                 chunk = map.addChunk(arvCorners[1]);  //TR
@@ -112,8 +116,9 @@ public class SprPlayer extends Sprite {
                 if (chunk.arsprNPO[(int) vNewLocation.y][(int) vNewLocation.x] != null) return false;
                 if (chunk.arsprTiles[(int) vNewLocation.y][(int) vNewLocation.x].tileType == TileType.Mountain)
                     return false;
-                if (chunk.arsprTiles[(int) vNewLocation.y][(int) vNewLocation.x].tileType == TileType.Water)
-                    return false;
+                if (chunk.arsprTiles[(int) vNewLocation.y][(int) vNewLocation.x].tileType == TileType.Water) {
+                    inWater = true;
+                }
             } catch (Exception e) {
                 return false;
             }
@@ -124,8 +129,9 @@ public class SprPlayer extends Sprite {
                     if (chunk.arsprNPO[(int) vNewLocation.y][(int) vNewLocation.x] != null) return false;
                     if (chunk.arsprTiles[(int) vNewLocation.y][(int) vNewLocation.x].tileType == TileType.Mountain)
                         return false;
-                    if (chunk.arsprTiles[(int) vNewLocation.y][(int) vNewLocation.x].tileType == TileType.Water)
-                        return false;
+                    if (chunk.arsprTiles[(int) vNewLocation.y][(int) vNewLocation.x].tileType == TileType.Water) {
+                        inWater = true;
+                    }
                 } catch (Exception e) {
                     return false;
                 }
@@ -135,8 +141,9 @@ public class SprPlayer extends Sprite {
                     if (chunk.arsprNPO[(int) vNewLocation.y][(int) vNewLocation.x] != null) return false;
                     if (chunk.arsprTiles[(int) vNewLocation.y][(int) vNewLocation.x].tileType == TileType.Mountain)
                         return false;
-                    if (chunk.arsprTiles[(int) vNewLocation.y][(int) vNewLocation.x].tileType == TileType.Water)
-                        return false;
+                    if (chunk.arsprTiles[(int) vNewLocation.y][(int) vNewLocation.x].tileType == TileType.Water) {
+                        inWater = true;
+                    }
                 } catch (Exception e) {
                     return false;
                 }
@@ -148,8 +155,9 @@ public class SprPlayer extends Sprite {
                 if (chunk.arsprNPO[(int) vNewLocation.y][(int) vNewLocation.x] != null) return false;
                 if (chunk.arsprTiles[(int) vNewLocation.y][(int) vNewLocation.x].tileType == TileType.Mountain)
                     return false;
-                if (chunk.arsprTiles[(int) vNewLocation.y][(int) vNewLocation.x].tileType == TileType.Water)
-                    return false;
+                if (chunk.arsprTiles[(int) vNewLocation.y][(int) vNewLocation.x].tileType == TileType.Water) {
+                    inWater = true;
+                }
             } catch (Exception e) {
                 return false;
             }

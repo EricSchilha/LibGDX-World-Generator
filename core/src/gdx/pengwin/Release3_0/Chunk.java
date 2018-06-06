@@ -35,13 +35,12 @@ public class Chunk {
                 fWidthOffset += fPersistence;
                 arsprTiles[y][x] = (dNoiseVal < 0.35) ? new SprTile(TileType.Water) : (dNoiseVal < 0.65 ? new SprTile(TileType.Grass) : new SprTile(TileType.Mountain));
                 if (x % 2 == 0 && y % 2 == 0) {
-//                    arsprNPO[y][x] = new SprNPO(NPOType.Tree);
                     if (arsprTiles[y][x].tileType == TileType.Grass) {
                         try {
-                            int nTreeX = randNPO.nextInt(3) - 1;
-                            int nTreeY = randNPO.nextInt(3) - 1;
-                            if (arsprTiles[y + nTreeY][x + nTreeX].tileType == TileType.Grass) {
-                                arsprNPO[y + nTreeY][x + nTreeX] = new SprNPO(NPOType.Tree);
+                            int nX = randNPO.nextInt(3) - 1;
+                            int nY = randNPO.nextInt(3) - 1;
+                            if (arsprTiles[y + nY][x + nX].tileType == TileType.Grass) {
+                                arsprNPO[y + nY][x + nX] = new SprNPO((randNPO.nextInt(4) < 1) ? NPOType.Rock : NPOType.Tree);
                             }
                         } catch (Exception e) {
                         }

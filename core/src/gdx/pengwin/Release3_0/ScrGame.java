@@ -23,7 +23,8 @@ public class ScrGame extends GameScreen {
         //PROBLEMS
         //Spawn In Tree Seed: 54530980
         //Top of Tree Off Seed: 12218387
-        map = new Map(12218387);
+        //Water Collision Problems: 97531629
+        map = new Map(nSeed);
 
     }
 
