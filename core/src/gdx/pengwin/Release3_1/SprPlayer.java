@@ -26,6 +26,7 @@ public class SprPlayer extends Sprite {
     private float fSpeed = 0.05f;                                           //SPEED OF THE PLAYER, IN FRACTIONS OF TILESIZE.
     private float fPlayerSizeInTiles = 1.0f;                                //NUMBER OF TILES THE PLAYER TAKES UP (DON'T MAKE >1).
     private float fAniSpeed = 5.2f;                                         //ANIMATION SPEED. SHOULD BE CHANGED WITH SPEED.
+    public float fVertOffset = 0.1f, fHoriOffset = 0.25f;                   //REMOVES WHITESPACE.
 
 
     public SprPlayer(Vector2 vLocation) {
@@ -93,16 +94,27 @@ public class SprPlayer extends Sprite {
 
         //Reordered array to make it easier to use (0 is Top Left)
         vNewNewLocation.set(vNewLocation.x, vNewLocation.y);
-        float fVertOffset = 0.1f;   //Remove whitespace
-        float fHoriOffset = 0.25f;
+        /*
+        vNewLocation.set(vNewNewLocation.x, vNewNewLocation.y);                                                         //Bottom Left
+        arvCorners[2] = vNewLocation.cpy();
+        vNewLocation.set(vNewNewLocation.x, vNewNewLocation.y - fPlayerSizeInTiles / 2);                                //Top Left
+        arvCorners[0] = vNewLocation.cpy();
+        vNewLocation.set(vNewNewLocation.x + fPlayerSizeInTiles, vNewNewLocation.y - fPlayerSizeInTiles / 2);           //Top Right
+        arvCorners[1] = vNewLocation.cpy();
+        vNewLocation.set(vNewNewLocation.x + fPlayerSizeInTiles, vNewNewLocation.y);                                    //Bottom Right
+        arvCorners[3] = vNewLocation.cpy();
+        /*/
         vNewLocation.set(vNewNewLocation.x + fHoriOffset, vNewNewLocation.y - fVertOffset);                             //Bottom Left
         arvCorners[2] = vNewLocation.cpy();
-        vNewLocation.set(vNewNewLocation.x + fHoriOffset, vNewNewLocation.y + fVertOffset - fPlayerSizeInTiles / 2);     //Top Left
+        vNewLocation.set(vNewNewLocation.x + fHoriOffset, vNewNewLocation.y + fVertOffset - fPlayerSizeInTiles / 2);    //Top Left
         arvCorners[0] = vNewLocation.cpy();
-        vNewLocation.set(vNewNewLocation.x - fHoriOffset + fPlayerSizeInTiles, vNewNewLocation.y + fVertOffset - fPlayerSizeInTiles / 2);           //Top Right
+        vNewLocation.set(vNewNewLocation.x - fHoriOffset + fPlayerSizeInTiles,                                          //Top Right
+                         vNewNewLocation.y + fVertOffset - fPlayerSizeInTiles / 2);
         arvCorners[1] = vNewLocation.cpy();
-        vNewLocation.set(vNewNewLocation.x - fHoriOffset + fPlayerSizeInTiles, vNewNewLocation.y - fHoriOffset);        //Bottom Right
+        vNewLocation.set(vNewNewLocation.x - fHoriOffset + fPlayerSizeInTiles, vNewNewLocation.y - fVertOffset);        //Bottom Right
         arvCorners[3] = vNewLocation.cpy();
+        //*/
+
 
         //*
         Chunk chunk = map.addChunk(arvCorners[0]);  //TL

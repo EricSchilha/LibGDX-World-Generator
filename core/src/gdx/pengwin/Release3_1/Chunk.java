@@ -40,7 +40,19 @@ public class Chunk {
                             int nX = randNPO.nextInt(3) - 1;
                             int nY = randNPO.nextInt(3) - 1;
                             if (arsprTiles[y + nY][x + nX].tileType == TileType.Grass) {
-                                arsprNPO[y + nY][x + nX] = new SprNPO((randNPO.nextInt(4) < 1) ? NPOType.Rock : NPOType.Tree);
+                                arsprNPO[y + nY][x + nX] = new SprNPO(NPOType.Tree);
+                            }
+                        } catch (Exception e) {
+                        }
+                    }
+                }
+                if(x % 3 == 0 && y % 3 == 0) {
+                    if (arsprTiles[y][x].tileType == TileType.Grass) {
+                        try {
+                            int nX = randNPO.nextInt(3) - 1;
+                            int nY = randNPO.nextInt(3) - 1;
+                            if (arsprTiles[y + nY][x + nX].tileType == TileType.Grass) {
+                                arsprNPO[y + nY][x + nX] = new SprNPO(NPOType.Rock);
                             }
                         } catch (Exception e) {
                         }
@@ -58,7 +70,8 @@ public class Chunk {
             for (int x = 0; x < arsprTiles[0].length; x++) {
                 if (arsprTiles[y][x].TILE_SIZE * (vTopLeft.x - player.getLocation().x + x + 1) + player.nPixelX > 0 && arsprTiles[y][x].TILE_SIZE * (vTopLeft.x - player.getLocation().x + x) + player.nPixelX < Gdx.graphics.getWidth() && arsprTiles[y][x].TILE_SIZE * (vTopLeft.y - player.getLocation().y + y + 1) + player.nPixelY > 0 && arsprTiles[y][x].TILE_SIZE * (vTopLeft.y - player.getLocation().y + y - 1) + player.nPixelY < Gdx.graphics.getHeight()) {
                     arsprTiles[y][x].draw(batch, arsprTiles[y][x].TILE_SIZE * (vTopLeft.x - player.getLocation().x + x) + player.nPixelX, arsprTiles[y][x].TILE_SIZE * (vTopLeft.y - player.getLocation().y + y) + player.nPixelY);
-                    if(!playerDrawn && arsprTiles[y][x].TILE_SIZE * (vTopLeft.y - player.getLocation().y + y) + player.nPixelY >= player.nPixelY) {
+                    if(!playerDrawn && arsprTiles[y][x].TILE_SIZE * (vTopLeft.y - player.getLocation().y + y + player.fVertOffset) + player.nPixelY >= player.nPixelY) {
+                        //System.out.println(player.nPixelX + "\t:  " + player.nPixelY);
                         player.draw(batch);
                         playerDrawn = true;
                     }
