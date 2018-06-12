@@ -67,6 +67,9 @@ public class ScrGame extends GameScreen {
             case Input.Keys.RIGHT:
                 map.sprPlayer.arnKeys[3] = 1;
                 break;
+            case Input.Keys.ESCAPE:
+                showButtons = !showButtons;
+                break;
         }
         return false;
     }
