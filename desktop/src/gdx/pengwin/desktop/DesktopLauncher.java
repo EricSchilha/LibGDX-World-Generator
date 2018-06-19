@@ -11,7 +11,6 @@ public class DesktopLauncher {
         config.title = "PENGWIN";
         config.width = 160*nScale;
         config.height = 120*nScale;
-        //config.resizable = false;
         new LwjglApplication(new gdx.pengwin.Release3_1.GamMain(), config);
     }
 }

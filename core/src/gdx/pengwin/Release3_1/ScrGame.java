@@ -16,7 +16,7 @@ public class ScrGame extends GameScreen {
     public ScrGame(GamMain gamMain) { //TODO: move the code from here into GameScreen constructor (maybe)
         this.gamMain = gamMain;
         this.nSeed = (int)(Math.random()* 100000000);
-        System.out.println(nSeed);
+        System.out.println("SEED: " + nSeed);
         super.screenType = this.screenType;
         super.txButtonUp = this.txButtonUp;
         super.txButtonDown = this.txButtonDown;
@@ -24,7 +24,7 @@ public class ScrGame extends GameScreen {
         //Spawn In Tree Seed: 54530980
         //Top of Tree Off Seed: 12218387
         //Water Collision Problems: 97531629
-        map = new Map(50204515);
+        map = new Map(nSeed);
 
     }
 

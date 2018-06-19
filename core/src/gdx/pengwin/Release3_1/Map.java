@@ -46,7 +46,6 @@ public class Map {
         //*
         Vector2 vPlayerChunk = getChunkIndices(sprPlayer.getLocation());
         if (arChunks[arChunks[arChunks.length / 2].length / 2][arChunks.length / 2].vTopLeft.x != vPlayerChunk.x || arChunks[arChunks[arChunks.length / 2].length / 2][arChunks.length / 2].vTopLeft.y != vPlayerChunk.y) {
-            System.out.println("NEW CHUNK");
             int nPlayerChunkX = (int) vPlayerChunk.x;
             int nPlayerChunkY = (int) vPlayerChunk.y;
             for (int y = 0; y < arChunks.length; y++)
